@@ -9,19 +9,27 @@ from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
     PageBreak, HRFlowable,
 )
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from pathlib import Path
 
 OUT = Path(__file__).parent / "TetrioCoach_Paper_Outline_EN.pdf"
+
+# Embed true Times New Roman (TTF) so that em-dash, multiplication sign,
+# and a serifed capital I all render unambiguously in every PDF viewer.
+pdfmetrics.registerFont(TTFont('TNR', 'C:/Windows/Fonts/times.ttf'))
+pdfmetrics.registerFont(TTFont('TNR-Bold', 'C:/Windows/Fonts/timesbd.ttf'))
+pdfmetrics.registerFont(TTFont('TNR-Italic', 'C:/Windows/Fonts/timesi.ttf'))
 
 GRAY = HexColor('#555555')
 ACCENT = HexColor('#1a3a6b')
 LIGHT_BG = HexColor('#f0f4fa')
 LINE_COLOR = HexColor('#cccccc')
 
-SERIF = 'Times-Roman'
-SERIF_B = 'Times-Bold'
-SERIF_I = 'Times-Italic'
-SANS_B = 'Helvetica-Bold'
+SERIF = 'TNR'
+SERIF_B = 'TNR-Bold'
+SERIF_I = 'TNR-Italic'
+SANS_B = 'TNR-Bold'
 
 S_TITLE = ParagraphStyle('Title', fontName=SERIF_B, fontSize=16, leading=21, alignment=TA_CENTER, spaceAfter=4)
 S_SUBTITLE = ParagraphStyle('Subtitle', fontName=SERIF_I, fontSize=10, leading=14, alignment=TA_CENTER, textColor=GRAY, spaceAfter=2)
@@ -335,8 +343,8 @@ def build():
     # Case 1
     story.append(Paragraph(B('Case 1: Longitudinal Growth Analysis (Subject P, 37 matches over one year)'), S_H3))
     story.append(Paragraph(
-        'One year of replay data (37 .ttrm files) from a single player was partitioned into three periods&#8212;early '
-        '(2025-06 to 08), mid (2025-12 to 2026-03), and recent (2026-06)&#8212;and analyzed.',
+        'One year of replay data (37 .ttrm files) from a single player was partitioned into three periods and analyzed: '
+        'early (2025-06 to 08), mid (2025-12 to 2026-03), and recent (2026-06).',
         S_BODY))
     growth = [
         [Paragraph(B('Period'), S_TBL_H), Paragraph(B('Rounds'), S_TBL_H), Paragraph(B('APM'), S_TBL_H),
@@ -391,7 +399,7 @@ def build():
         'ML model predicted &quot;speed&quot; as the top label (confidence 0.58), and the rule-based evaluator likewise '
         'detected the low PPS as the principal weakness. Accuracy (fault 17.9%) is relatively sound, but the player '
         'exhibits a pattern of insufficient speed and T-Spin utilization; the system, based on an estimated A tier, '
-        'recommended TKI/DT Cannon/STSD and placed &quot;three 40L sprints&#8212;a speed-sense warm-up&quot; first in the '
+        'recommended TKI/DT Cannon/STSD and placed &quot;three 40L sprints as a speed-sense warm-up&quot; first in the '
         '20-minute routine, generating a prescription that prioritizes speed improvement above all.',
         S_BODY))
     story.append(Spacer(1, 6))
@@ -441,7 +449,7 @@ def build():
         B('Qualitative contrast of final prescriptions.') + ' Between players with different ML top-1 labels, the '
         'downstream prescriptions diverge clearly. For Player A (judged &quot;balanced&quot;), the first step of the '
         '20-minute routine was &quot;10 repetitions of the TKI opener pattern&quot; (mastering attack builds), whereas for '
-        'Player C (judged &quot;speed&quot;), &quot;three 40L sprints&#8212;a speed-sense warm-up&quot; was placed first. '
+        'Player C (judged &quot;speed&quot;), &quot;three 40L sprints as a speed-sense warm-up&quot; was placed first. '
         'In addition, the build-recommendation set varied by estimated tier (S/S/A+/A): high-difficulty openers such as '
         'PCO and Hachispin were presented to Players A and B, while a foundational STSD-centered build set was presented '
         'to Player C. This demonstrates that the combination of ML label &#8594; tier estimation &#8594; build matrix '
@@ -520,11 +528,11 @@ def build():
         S_BODY))
 
     story.append(Paragraph('5.4 Future Work', S_H2))
-    story.append(Paragraph('&#8226; Completing a placement-accuracy comparison system via a direct build of Cold Clear 2 (Rust).', S_BULLET))
-    story.append(Paragraph('&#8226; Collecting all-tier replays and retraining the model by securing a TETR.IO bot account.', S_BULLET))
-    story.append(Paragraph('&#8226; An A/B user study tracking TR change between TetrioCoach users and non-users.', S_BULLET))
-    story.append(Paragraph('&#8226; Real-time coaching: extending to an instant-feedback system via in-game board-state capture.', S_BULLET))
-    story.append(Paragraph('&#8226; Generalizing the framework to other competitive games such as Puyo Puyo and rhythm games.', S_BULLET))
+    story.append(Paragraph('&#8226; Complete a placement-accuracy comparison system via a direct build of Cold Clear 2 (Rust).', S_BULLET))
+    story.append(Paragraph('&#8226; Collect all-tier replays and retrain the model by securing a TETR.IO bot account.', S_BULLET))
+    story.append(Paragraph('&#8226; Conduct an A/B user study tracking TR change between TetrioCoach users and non-users.', S_BULLET))
+    story.append(Paragraph('&#8226; Extend to real-time coaching with an instant-feedback system via in-game board-state capture.', S_BULLET))
+    story.append(Paragraph('&#8226; Generalize the framework to other competitive games such as Puyo Puyo and rhythm games.', S_BULLET))
 
     # ═══ VI. Conclusion ═══
     story.append(Paragraph('VI. Conclusion', S_H1))
