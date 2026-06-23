@@ -5,7 +5,7 @@ from pathlib import Path
 from _paths import get_base_dir, get_app_dir
 
 SUPPORTED_LANGS = ('ko', 'en', 'zh', 'ja')
-_current_lang: str = 'ko'
+_current_lang: str = 'en'
 _strings: dict[str, dict[str, str]] = {}
 _loaded = False
 
@@ -70,7 +70,7 @@ def detect_language() -> str:
         except Exception:
             pass
 
-    return 'ko'
+    return 'en'
 
 
 def init() -> None:

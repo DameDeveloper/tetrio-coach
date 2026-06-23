@@ -352,7 +352,7 @@ def build():
     story.append(Spacer(1, 6))
 
     # Case 2: 고수준 상대 (약점 없음)
-    story.append(Paragraph(B('사례 2: 고수준 상대 플레이어 분석 (kidonredbull)'), S_H3))
+    story.append(Paragraph(B('사례 2: 고수준 균형형 플레이어 분석 (Player A, 익명)'), S_H3))
     story.append(Paragraph(
         '8라운드(905피스) 분석 결과, PPS 2.28, APM 57.8, T-Spin율 5.86%, Finesse Fault 22.8%로 '
         '규칙 기반 평가기가 약점을 검출하지 않았다(WeaknessReport 0건). '
@@ -364,7 +364,7 @@ def build():
     story.append(Spacer(1, 6))
 
     # Case 3: 특화형 플레이어
-    story.append(Paragraph(B('사례 3: T-Spin 특화형 저속 플레이어 분석 (jjleesuwan)'), S_H3))
+    story.append(Paragraph(B('사례 3: T-Spin 특화형 저속 플레이어 분석 (Player B, 익명)'), S_H3))
     story.append(Paragraph(
         '7라운드(774피스) 분석 결과, PPS 1.49(저속), APM 53.5, T-Spin율 6.98%(고활용), '
         'Finesse Fault 40.6%. 규칙 기반 평가기는 "속도 향상 필요", "공격 전개 약함", "배치 정확도 개선 필요"를 '
@@ -378,7 +378,7 @@ def build():
     story.append(Paragraph(B('사례 4: 다중 플레이어 비교 분석'), S_H3))
     comp_data = [
         [Paragraph(B('지표'), S_TBL_H), Paragraph(B('lazy_ningen'), S_TBL_H),
-         Paragraph(B('kidonredbull'), S_TBL_H), Paragraph(B('jjleesuwan'), S_TBL_H), Paragraph(B('goalf'), S_TBL_H)],
+         Paragraph(B('Player A'), S_TBL_H), Paragraph(B('Player B'), S_TBL_H), Paragraph(B('Player C'), S_TBL_H)],
         [Paragraph('PPS', S_TBL), Paragraph('1.92', S_TBL_C), Paragraph(B('2.28'), S_TBL_C), Paragraph('1.49', S_TBL_C), Paragraph('1.57', S_TBL_C)],
         [Paragraph('APM', S_TBL), Paragraph('55.1', S_TBL_C), Paragraph(B('57.8'), S_TBL_C), Paragraph('53.5', S_TBL_C), Paragraph('49.6', S_TBL_C)],
         [Paragraph('T-Spin%', S_TBL), Paragraph('4.3', S_TBL_C), Paragraph('5.86', S_TBL_C), Paragraph(B('6.98'), S_TBL_C), Paragraph(B('7.41'), S_TBL_C)],
@@ -401,8 +401,8 @@ def build():
     story.append(tbl_c)
     story.append(Paragraph(
         '4명의 플레이어는 각각 다른 강점/약점 프로필을 보이며, 하이브리드 ML 모델은 이를 차별화된 예측으로 변환하였다. '
-        'kidonredbull은 attack/finesse가 46%/46%로 동률이어 균형형 플레이어로 판별되었고, '
-        'jjleesuwan은 finesse(60%)로 명확한 1순위 약점이 식별되었다. '
+        'Player A은 attack/finesse가 46%/46%로 동률이어 균형형 플레이어로 판별되었고, '
+        'Player B은 finesse(60%)로 명확한 1순위 약점이 식별되었다. '
         'lazy_ningen은 finesse(56%)로 Fault 55.8%와 일치하는 진단이 내려졌다. '
         '이전 버전(모든 플레이어가 defense로 수렴)과 달리, 하이브리드 접근은 ML의 데이터 분포 학습과 '
         '규칙 기반의 도메인 지식을 결합하여 플레이어별 차별화된 진단을 가능하게 하였다.',
@@ -430,6 +430,16 @@ def build():
     story.append(Paragraph('- 보드 시뮬레이터: DAS/ARR 타이밍 불일치로 라인 클리어 재현 정확도 제한', S_BULLET))
     story.append(Paragraph('- 사용자 연구(User Study) 부재: 처방적 피드백의 실효성을 정량적으로 검증하기 위해 '
         '최소한 소규모 파일럿 테스트(티어별 2~3명, TR 변화 추적)가 필요하나 본 연구에서는 수행하지 못함', S_BULLET))
+
+    story.append(Paragraph('5.3 윤리적 고려사항', S_H2))
+    story.append(Paragraph(
+        '본 연구의 사례 분석에 사용된 리플레이 데이터 중, 저자 본인(lazy_ningen)의 데이터를 제외한 '
+        '상대 플레이어의 데이터는 개별 동의를 구하지 않고 수집되었다. 이에 따라 논문 내 모든 상대 플레이어의 '
+        '닉네임은 Player A, Player B, Player C 등으로 익명화 처리하였다. '
+        'ML 모델 학습에 사용된 Kaggle 데이터셋(n3koasakura, 2024)은 공개 데이터셋으로, '
+        'TETR.IO의 공개 API를 통해 수집된 데이터이며 개인 식별 정보를 포함하지 않는다. '
+        '향후 사용자 연구 수행 시에는 IRB(기관생명윤리위원회) 승인 절차를 거칠 것을 명시한다.',
+        S_BODY))
 
     story.append(Paragraph('5.3 향후 연구', S_H2))
     story.append(Paragraph('- Cold Clear 2(Rust) 직접 빌드를 통한 배치 정확도 비교 시스템 완성', S_BULLET))
