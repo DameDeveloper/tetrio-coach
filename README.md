@@ -137,6 +137,10 @@ Accuracy 0.962, **Macro F1-score 0.960**, 5-fold CV Macro F1 0.956 (±0.003). La
 
 **Top feature importances**: `lines_per_piece` (28.6%), `rating_norm` (21.7%), `max_btb` (15.9%), `tspin_rate` (6.4%)
 
+### Separation of Concerns: Style Classification vs. Tier Calibration
+
+The ML style classifier is trained on the curated top-500 (elite) placement data, where style archetypes are cleanest. Skill-level calibration is handled separately by an **empirical all-tier benchmark** (`training/models/tier_benchmarks_all.json`): 1,080 players sampled from the live TETR.IO leaderboard (100 per tier across 11 tiers C→X+). Tier estimation uses nearest-centroid matching against these real per-tier means (APM/PPS/VS), so a lower-tier player is assessed against the norms of their own tier rather than absolute thresholds. Regenerate via `python training/collect_all_tiers.py`.
+
 ---
 
 ## Training Data

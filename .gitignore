@@ -30,3 +30,4 @@ training/data/leaderboard.json
 
 # Cached Kaggle data
 .cache/
+training/data/all_tier_raw.json

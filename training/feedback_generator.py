@@ -153,20 +153,62 @@ def _section_build_suggestions(p: PlayerProfile) -> str:
     return '\n'.join(lines)
 
 
+import json as _json
+from pathlib import Path as _Path
+
+_TIER_BENCH_CACHE = None
+
+
+def _load_tier_benchmarks() -> dict:
+    """Load empirical per-tier benchmarks (1,080 players across 11 tiers)."""
+    global _TIER_BENCH_CACHE
+    if _TIER_BENCH_CACHE is not None:
+        return _TIER_BENCH_CACHE
+    path = _Path(__file__).parent / 'models' / 'tier_benchmarks_all.json'
+    try:
+        _TIER_BENCH_CACHE = _json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        _TIER_BENCH_CACHE = {}
+    return _TIER_BENCH_CACHE
+
+
+# Fallback thresholds (used only if empirical benchmarks are unavailable),
+# recalibrated against the collected all-tier means.
+_FALLBACK_TIER_THRESHOLDS = [
+    ('X+', 3.27, 169.8), ('X', 2.82, 130.8), ('U', 2.49, 107.8),
+    ('SS', 2.04, 79.2), ('S+', 1.79, 57.5), ('S', 1.63, 46.4),
+    ('A+', 1.37, 33.8), ('A', 1.24, 27.2), ('B+', 1.11, 20.9),
+    ('B', 1.04, 18.9), ('C', 0.87, 13.0),
+]
+
+
 def _estimate_tier(p: PlayerProfile) -> str:
+    """Estimate the player's tier by nearest-centroid match against the
+    empirical per-tier means of (PPS, APM, VS) collected from the TETR.IO
+    leaderboard (100 random players per tier across 11 tiers)."""
     apm = p.avg_apm
     pps = p.avg_pps
-    if pps >= 3.0 and apm >= 120: return 'X+'
-    if pps >= 2.5 and apm >= 90: return 'X'
-    if pps >= 2.3 and apm >= 75: return 'U'
-    if pps >= 2.1 and apm >= 65: return 'SS'
-    if pps >= 2.0 and apm >= 55: return 'S+'
-    if pps >= 1.8 and apm >= 45: return 'S'
-    if pps >= 1.6 and apm >= 40: return 'A+'
-    if pps >= 1.4 and apm >= 35: return 'A'
-    if pps >= 1.2 and apm >= 25: return 'B+'
-    if pps >= 1.0: return 'B'
-    return 'C'
+    vs = p.avg_vs
+
+    bench = _load_tier_benchmarks()
+    if bench:
+        best_tier, best_dist = 'C', float('inf')
+        for tier, b in bench.items():
+            d_pps = (pps - b['pps']['mean']) / 0.5
+            d_apm = (apm - b['apm']['mean']) / 25.0
+            d_vs = (vs - b['vs']['mean']) / 60.0 if vs else 0.0
+            dist = d_pps * d_pps + d_apm * d_apm + d_vs * d_vs
+            if dist < best_dist:
+                best_dist, best_tier = dist, tier
+        return best_tier
+
+    # Fallback: nearest centroid on (PPS, APM) using calibrated means.
+    best_tier, best_dist = 'C', float('inf')
+    for tier, t_pps, t_apm in _FALLBACK_TIER_THRESHOLDS:
+        dist = ((pps - t_pps) / 0.5) ** 2 + ((apm - t_apm) / 25.0) ** 2
+        if dist < best_dist:
+            best_dist, best_tier = dist, tier
+    return best_tier
 
 
 def _section_training_plan(top_weaknesses: list[WeaknessReport], p: PlayerProfile) -> str:
