@@ -310,7 +310,7 @@ def build():
     story.append(Paragraph('4.3 사례 연구', S_H2))
 
     # Case 1: 종단 성장 추이
-    story.append(Paragraph(B('사례 1: 플레이어 종단 성장 추이 분석 (lazy_ningen, 1년간 37매치)'), S_H3))
+    story.append(Paragraph(B('사례 1: 플레이어 종단 성장 추이 분석 (Subject P, 1년간 37매치)'), S_H3))
     story.append(Paragraph(
         '동일 플레이어의 1년간 리플레이 데이터(37개 .ttrm 파일)를 초기(2025-06~08), '
         '중기(2025-12~2026-03), 최근(2026-06) 세 구간으로 분할하여 분석하였다.',
@@ -340,7 +340,7 @@ def build():
         ('TOPPADDING', (0, 0), (-1, -1), 3),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 4] 플레이어 lazy_ningen의 종단 성장 추이 (1년간)'), S_H3))
+    story.append(Paragraph(I('[Table 4] 플레이어 Subject P의 종단 성장 추이 (1년간)'), S_H3))
     story.append(tbl_g)
     story.append(Paragraph(
         '1년간 APM이 49.3에서 55.1로, PPS가 1.81에서 1.92로, 승률이 54.8%에서 62.5%로 상승하였다. '
@@ -377,7 +377,7 @@ def build():
     # Case 4: 비교 분석
     story.append(Paragraph(B('사례 4: 다중 플레이어 비교 분석'), S_H3))
     comp_data = [
-        [Paragraph(B('지표'), S_TBL_H), Paragraph(B('lazy_ningen'), S_TBL_H),
+        [Paragraph(B('지표'), S_TBL_H), Paragraph(B('Subject P'), S_TBL_H),
          Paragraph(B('Player A'), S_TBL_H), Paragraph(B('Player B'), S_TBL_H), Paragraph(B('Player C'), S_TBL_H)],
         [Paragraph('PPS', S_TBL), Paragraph('1.92', S_TBL_C), Paragraph(B('2.28'), S_TBL_C), Paragraph('1.49', S_TBL_C), Paragraph('1.57', S_TBL_C)],
         [Paragraph('APM', S_TBL), Paragraph('55.1', S_TBL_C), Paragraph(B('57.8'), S_TBL_C), Paragraph('53.5', S_TBL_C), Paragraph('49.6', S_TBL_C)],
@@ -403,10 +403,55 @@ def build():
         '4명의 플레이어는 각각 다른 강점/약점 프로필을 보이며, 하이브리드 ML 모델은 이를 차별화된 예측으로 변환하였다. '
         'Player A은 attack/finesse가 46%/46%로 동률이어 균형형 플레이어로 판별되었고, '
         'Player B은 finesse(60%)로 명확한 1순위 약점이 식별되었다. '
-        'lazy_ningen은 finesse(56%)로 Fault 55.8%와 일치하는 진단이 내려졌다. '
+        'Subject P은 finesse(56%)로 Fault 55.8%와 일치하는 진단이 내려졌다. '
         '이전 버전(모든 플레이어가 defense로 수렴)과 달리, 하이브리드 접근은 ML의 데이터 분포 학습과 '
         '규칙 기반의 도메인 지식을 결합하여 플레이어별 차별화된 진단을 가능하게 하였다.',
         S_BODY))
+
+    # Case 5: Tier benchmark comparison
+    story.append(Paragraph(B('사례 5: S~U 티어 벤치마크 대비 Subject P 성장 분석'), S_H3))
+    story.append(Paragraph(
+        'TETR.IO 공개 리더보드 API에서 S, S+, SS, U 각 티어의 플레이어 10명을 무작위 추출하여 '
+        '평균 통계를 산출하고, Subject P의 종단적 성장 궤적과 비교하였다.',
+        S_BODY))
+
+    bench_data = [
+        [Paragraph(B('구간/티어'), S_TBL_H), Paragraph(B('TR'), S_TBL_H), Paragraph(B('APM'), S_TBL_H),
+         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('VS'), S_TBL_H), Paragraph(B('승률'), S_TBL_H), Paragraph(B('n'), S_TBL_H)],
+        [Paragraph('S tier avg', S_TBL), Paragraph('14,996', S_TBL_C), Paragraph('39.7', S_TBL_C),
+         Paragraph('1.45', S_TBL_C), Paragraph('86.5', S_TBL_C), Paragraph('45.3%', S_TBL_C), Paragraph('10', S_TBL_C)],
+        [Paragraph('S+ tier avg', S_TBL), Paragraph('16,276', S_TBL_C), Paragraph('42.9', S_TBL_C),
+         Paragraph('1.43', S_TBL_C), Paragraph('96.7', S_TBL_C), Paragraph('24.8%', S_TBL_C), Paragraph('10', S_TBL_C)],
+        [Paragraph('SS tier avg', S_TBL), Paragraph('17,861', S_TBL_C), Paragraph('58.0', S_TBL_C),
+         Paragraph('1.74', S_TBL_C), Paragraph('121.6', S_TBL_C), Paragraph('30.7%', S_TBL_C), Paragraph('10', S_TBL_C)],
+        [Paragraph('U tier avg', S_TBL), Paragraph('20,163', S_TBL_C), Paragraph('79.9', S_TBL_C),
+         Paragraph('2.05', S_TBL_C), Paragraph('167.0', S_TBL_C), Paragraph('33.5%', S_TBL_C), Paragraph('10', S_TBL_C)],
+        [Paragraph(I('Subject P 초기'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('49.3'), S_TBL_C),
+         Paragraph(I('1.81'), S_TBL_C), Paragraph(I('108.7'), S_TBL_C), Paragraph(I('54.8%'), S_TBL_C), Paragraph('31R', S_TBL_C)],
+        [Paragraph(I('Subject P 중기'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('45.9'), S_TBL_C),
+         Paragraph(I('1.75'), S_TBL_C), Paragraph(I('94.1'), S_TBL_C), Paragraph(I('56.1%'), S_TBL_C), Paragraph('41R', S_TBL_C)],
+        [Paragraph(B('Subject P 최근'), S_TBL), Paragraph(B('-'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C),
+         Paragraph(B('1.92'), S_TBL_C), Paragraph(B('119.4'), S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph(B('16R'), S_TBL_C)],
+    ]
+    tbl_bench = Table(bench_data, colWidths=[80, 50, 42, 40, 42, 45, 30])
+    tbl_bench.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG),
+        ('BACKGROUND', (0, 5), (-1, 7), HexColor('#f5f0ff')),
+        ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+    ]))
+    story.append(Paragraph(I('[Table 6] S~U 티어 벤치마크 대비 Subject P 위치 비교'), S_H3))
+    story.append(tbl_bench)
+    story.append(Paragraph(
+        'Subject P의 최근 지표(APM 55.1, PPS 1.92, VS 119.4)는 SS 티어 평균(APM 58.0, PPS 1.74, VS 121.6)과 '
+        '근접하며, PPS에서는 SS 평균을 초과한다. 반면 APM은 SS 평균에 약간 미달하여, '
+        '시스템이 진단한 "공격 전환 효율"이 다음 성장 포인트임을 티어 벤치마크가 객관적으로 뒷받침한다. '
+        '1년간의 성장 궤적은 S 수준(초기)에서 SS 근접(최근)으로의 상승을 보여주며, '
+        '이는 TetrioCoach의 피드백이 제시하는 개선 방향과 일치하는 간접 검증 근거가 된다.',
+        S_BODY))
+    story.append(Spacer(1, 6))
 
     # ═══════════════════════════════════════
     # V. 논의
@@ -433,9 +478,9 @@ def build():
 
     story.append(Paragraph('5.3 윤리적 고려사항', S_H2))
     story.append(Paragraph(
-        '본 연구의 사례 분석에 사용된 리플레이 데이터 중, 저자 본인(lazy_ningen)의 데이터를 제외한 '
-        '상대 플레이어의 데이터는 개별 동의를 구하지 않고 수집되었다. 이에 따라 논문 내 모든 상대 플레이어의 '
-        '닉네임은 Player A, Player B, Player C 등으로 익명화 처리하였다. '
+        '본 연구의 사례 분석에 사용된 리플레이 데이터의 플레이어들에게 개별 동의를 구하지 않았다. '
+        '이에 따라 논문 내 저자 본인을 포함한 모든 플레이어의 닉네임은 '
+        'Subject P, Player A, Player B, Player C 등으로 익명화 처리하였다. '
         'ML 모델 학습에 사용된 Kaggle 데이터셋(n3koasakura, 2024)은 공개 데이터셋으로, '
         'TETR.IO의 공개 API를 통해 수집된 데이터이며 개인 식별 정보를 포함하지 않는다. '
         '향후 사용자 연구 수행 시에는 IRB(기관생명윤리위원회) 승인 절차를 거칠 것을 명시한다.',
