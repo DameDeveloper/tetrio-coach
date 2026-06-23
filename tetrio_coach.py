@@ -1027,9 +1027,12 @@ class TetrioCoachAppModern(tk.Tk):
         _sep(sidebar)
 
         # Language selector
-        sec_lang = _section(sidebar, t('ui.language'))
-        self.var_lang = tk.StringVar(value=get_language())
-        lang_cb = ttk.Combobox(sec_lang, textvariable=self.var_lang, values=list(SUPPORTED_LANGS), state='readonly', width=8)
+        sec_lang = _section(sidebar, '🌐 ' + t('ui.language'))
+        self._lang_display = [f"{LANG_NAMES[l]} ({l})" for l in SUPPORTED_LANGS]
+        self._lang_codes = list(SUPPORTED_LANGS)
+        current_idx = self._lang_codes.index(get_language()) if get_language() in self._lang_codes else 0
+        self.var_lang_display = tk.StringVar(value=self._lang_display[current_idx])
+        lang_cb = ttk.Combobox(sec_lang, textvariable=self.var_lang_display, values=self._lang_display, state='readonly', width=18, font=('Segoe UI', 9))
         lang_cb.pack(fill='x', padx=2, ipady=4)
         lang_cb.bind('<<ComboboxSelected>>', lambda _e: self._change_language())
         _sep(sidebar)
@@ -1129,9 +1132,13 @@ class TetrioCoachAppModern(tk.Tk):
         self.lb_files.delete(idx)
 
     def _change_language(self):
-        lang = self.var_lang.get().strip()[:2]
+        display = self.var_lang_display.get()
+        idx = self._lang_display.index(display) if display in self._lang_display else 0
+        lang = self._lang_codes[idx]
         set_language(lang)
-        messagebox.showinfo(t('ui.language'), 'Please restart the app to apply language change.\n앱을 재시작하면 언어가 변경됩니다.')
+        self.destroy()
+        app = TetrioCoachAppModern()
+        app.mainloop()
 
     def _set_step(self, step: str, msg: str, color: str):
         # GUI 스레드 안전 호출 헬퍼
