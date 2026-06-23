@@ -220,6 +220,17 @@ def build():
         '클래스 불균형에 대해서는 노이즈 주입 오버샘플링(min_ratio=0.10)을 적용하였으며, '
         '최종 성능은 단일 Accuracy가 아닌 Macro-averaged F1-score로 보고한다.',
         S_BODY))
+    story.append(Paragraph(
+        B('2단계 파이프라인(K-Means → GradientBoosting)의 설계 근거:') + ' '
+        '본 구조는 K-Means의 기하학적 결정 경계를 지도학습 모델로 대리 학습(Surrogate Learning)하는 것으로, '
+        '높은 F1-score 자체는 수학적으로 예상 가능한 결과이다. 그러나 2단계 구조를 채택한 실익은 다음과 같다: '
+        '(1) K-Means는 새 데이터에 대해 가장 가까운 중심까지의 거리만으로 이산 라벨을 할당하지만, '
+        'GradientBoosting은 확률 분포(predict_proba)를 제공하여 경계선 사례에서 소프트 판단이 가능하다. '
+        '(2) 하이브리드 추론 시 ML 확률과 규칙 기반 점수를 가중 결합하는 과정에서, '
+        '연속 확률값을 제공하는 지도학습 모델이 이산 클러스터 할당보다 유연한 융합을 가능하게 한다. '
+        '(3) K-Means 재실행 없이 사전 학습된 분류기로 즉시 추론이 가능하여, '
+        'GUI 앱의 실시간 응답(<100ms)에 적합한 연산 효율을 확보한다.',
+        S_BODY))
 
     # Table: Classification Report (updated)
     story.append(Paragraph(I('[Table 1] ML 약점 분류기 성능 (K-Means 라벨링 + 오버샘플링)'), S_H3))
@@ -271,9 +282,12 @@ def build():
     story.append(Paragraph('4.1 ML 모델 성능', S_H2))
     story.append(Paragraph(
         'K-Means 클러스터링 기반 라벨링과 오버샘플링 적용 후, GradientBoosting 분류기는 '
-        'Macro F1-score 0.960, 5-fold CV Macro F1 0.956(+/-0.003)을 달성하였다. '
-        '4개 클래스(attack, defense, speed, tspin) 간 Support가 584~1,293으로 분포하여 '
-        '기존 극단적 불균형(12~12,908)이 해소되었다.',
+        '테스트셋(n=4,000)에서 Accuracy 0.962, Macro F1-score 0.960, 5-fold CV Macro F1 0.956(+/-0.003)을 달성하였다. '
+        '본 연구는 클래스 불균형 환경에서 단일 Accuracy가 다수 클래스에 의해 과대평가되는 문제를 회피하기 위해 '
+        'Macro F1-score를 일차 평가 지표로 채택한다. 오버샘플링으로 4개 클래스(attack, defense, speed, tspin) 간 '
+        'Support가 584~1,293으로 균형화(기존 극단적 불균형 12~12,908에서 개선)되어, '
+        'Accuracy(0.962)와 Macro F1(0.960)이 0.002 이내로 근접하였다. 이는 모든 클래스에서 분류 성능이 '
+        '고르게 확보되었음을 의미하며, 두 지표 간 괴리가 작다는 점이 균형화의 성공을 방증한다.',
         S_BODY))
     story.append(Paragraph(
         'Feature importance 분석 결과, lines_per_piece(28.6%)가 가장 높은 중요도를 보였으며, '
@@ -326,7 +340,7 @@ def build():
          Paragraph('61.3%', S_TBL_C), Paragraph('attack (48%)', S_TBL_C)],
         [Paragraph('중기 (2025-12~2026-03)', S_TBL), Paragraph('41', S_TBL_C), Paragraph('45.9', S_TBL_C),
          Paragraph('1.75', S_TBL_C), Paragraph('56.1%', S_TBL_C), Paragraph('3.9%', S_TBL_C),
-         Paragraph('58.3%', S_TBL_C), Paragraph('attack (53%)', S_TBL_C)],
+         Paragraph('58.3%', S_TBL_C), Paragraph('attack (52%)', S_TBL_C)],
         [Paragraph(B('최근 (2026-06)'), S_TBL), Paragraph(B('16'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C),
          Paragraph(B('1.92'), S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph(B('4.3%'), S_TBL_C),
          Paragraph(B('55.8%'), S_TBL_C), Paragraph(B('finesse (56%)'), S_TBL_C)],
@@ -345,32 +359,37 @@ def build():
     story.append(Paragraph(
         '1년간 APM이 49.3에서 55.1로, PPS가 1.81에서 1.92로, 승률이 54.8%에서 62.5%로 상승하였다. '
         'Finesse Fault는 61.3%에서 55.8%로 개선되었으나 여전히 심각 수준이다. '
-        '주목할 점은 하이브리드 ML 예측이 초기/중기에는 "attack"(48~53%)을 1순위로, '
-        '최근에는 "finesse"(56%)로 전환된다는 것이다. 이는 APM 향상에 따라 공격력 약점이 해소되면서 '
-        'Finesse가 새로운 핵심 병목으로 부상하는 자연스러운 성장 패턴을 모델이 포착한 것으로 해석된다.',
+        '주목할 점은 하이브리드 ML 예측이 초기/중기에는 "attack"(0.48~0.52)을 1순위로, '
+        '최근에는 "finesse"(0.56)로 전환된다는 것이다(2순위 약점도 attack↔finesse가 교차). '
+        '이는 APM이 49.3에서 55.1로 향상되며 공격력 약점이 상대적으로 해소되는 한편, '
+        'Finesse가 새로운 핵심 병목으로 부상하는 성장 패턴을 모델이 포착한 것으로 해석된다. '
+        '동일 피험자의 종단 데이터에서 약점 진단이 시간에 따라 이동한다는 점은, '
+        '모델이 단순히 고정된 라벨로 수렴하지 않고 입력 지표 변화에 반응함을 보여준다.',
         S_BODY))
     story.append(Spacer(1, 6))
 
-    # Case 2: 고수준 상대 (약점 없음)
+    # Case 2: 고수준 균형형 (낮은 Fault)
     story.append(Paragraph(B('사례 2: 고수준 균형형 플레이어 분석 (Player A, 익명)'), S_H3))
     story.append(Paragraph(
-        '8라운드(905피스) 분석 결과, PPS 2.28, APM 57.8, T-Spin율 5.86%, Finesse Fault 22.8%로 '
-        '규칙 기반 평가기가 약점을 검출하지 않았다(WeaknessReport 0건). '
-        'ML 모델도 "defense"를 예측하였으나, 실제로는 균형 잡힌 상위 플레이어에 해당한다. '
-        '추정 티어 S+ 기준으로 TKI, DT Cannon, PCO, Hachispin, STSD를 추천하며, '
+        'PPS 2.36(고속), APM 54.1, T-Spin율 4.33%, Finesse Fault 6.8%(우수)로 '
+        '모든 핵심 지표가 균형적이며 정확도가 특히 뛰어나다. 하이브리드 ML 모델은 "balanced"를 1순위(확신도 0.58)로 '
+        '예측하였고, 규칙 기반 평가기에서도 finesse 약점 점수가 거의 0에 수렴하였다. '
+        '추정 티어 S 기준으로 TKI, DT Cannon, Hachispin, STSD를 추천하며, '
         '"현재 수준을 유지하면서 다음 티어를 목표"라는 유지 관리형 피드백을 생성하였다. '
-        '이는 시스템이 약점 부재 사례에서도 적절한 응답을 생성함을 보여준다.',
+        '이는 시스템이 뚜렷한 약점이 없는 균형형 플레이어를 올바르게 식별함을 보여준다.',
         S_BODY))
     story.append(Spacer(1, 6))
 
-    # Case 3: 특화형 플레이어
-    story.append(Paragraph(B('사례 3: T-Spin 특화형 저속 플레이어 분석 (Player B, 익명)'), S_H3))
+    # Case 3: 저속 + T-Spin 미활용형
+    story.append(Paragraph(B('사례 3: 저속·T-Spin 미활용형 플레이어 분석 (Player C, 익명)'), S_H3))
     story.append(Paragraph(
-        '7라운드(774피스) 분석 결과, PPS 1.49(저속), APM 53.5, T-Spin율 6.98%(고활용), '
-        'Finesse Fault 40.6%. 규칙 기반 평가기는 "속도 향상 필요", "공격 전개 약함", "배치 정확도 개선 필요"를 '
-        '순서대로 검출하였다. 흥미로운 점은 T-Spin 활용도(6.98%)가 높음에도 불구하고 '
-        '낮은 PPS(1.49)로 인해 전체 APM이 제한되는 패턴으로, '
-        '시스템은 "속도를 먼저 올린 후 기존 T-Spin 능력을 결합"하라는 단계적 처방을 생성하였다.',
+        'PPS 1.56(저속), APM 50.9, T-Spin율 1.55%(낮음), Finesse Fault 17.9%(양호). '
+        '하이브리드 ML 모델은 "speed"를 1순위(확신도 0.58)로 예측하였으며, '
+        '규칙 기반 평가기 또한 낮은 PPS를 핵심 약점으로 검출하였다. '
+        '정확도(Fault 17.9%)는 상대적으로 양호하나 속도와 T-Spin 활용이 부족한 패턴으로, '
+        '시스템은 추정 티어 A 기준 TKI/DT Cannon/STSD 추천과 함께 '
+        '20분 루틴 첫 단계에 "40L 스프린트 3회 — 속도 감각 워밍업"을 우선 배치하여 '
+        '속도 개선을 최우선으로 하는 처방을 생성하였다.',
         S_BODY))
     story.append(Spacer(1, 6))
 
@@ -379,15 +398,14 @@ def build():
     comp_data = [
         [Paragraph(B('지표'), S_TBL_H), Paragraph(B('Subject P'), S_TBL_H),
          Paragraph(B('Player A'), S_TBL_H), Paragraph(B('Player B'), S_TBL_H), Paragraph(B('Player C'), S_TBL_H)],
-        [Paragraph('PPS', S_TBL), Paragraph('1.92', S_TBL_C), Paragraph(B('2.28'), S_TBL_C), Paragraph('1.49', S_TBL_C), Paragraph('1.57', S_TBL_C)],
-        [Paragraph('APM', S_TBL), Paragraph('55.1', S_TBL_C), Paragraph(B('57.8'), S_TBL_C), Paragraph('53.5', S_TBL_C), Paragraph('49.6', S_TBL_C)],
-        [Paragraph('T-Spin%', S_TBL), Paragraph('4.3', S_TBL_C), Paragraph('5.86', S_TBL_C), Paragraph(B('6.98'), S_TBL_C), Paragraph(B('7.41'), S_TBL_C)],
-        [Paragraph('Fault%', S_TBL), Paragraph('55.8', S_TBL_C), Paragraph(B('22.8'), S_TBL_C), Paragraph('40.6', S_TBL_C), Paragraph('45.6', S_TBL_C)],
-        [Paragraph('승률', S_TBL), Paragraph('62.5%', S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph('28.6%', S_TBL_C), Paragraph('28.6%', S_TBL_C)],
-        [Paragraph('추정 티어', S_TBL), Paragraph('S', S_TBL_C), Paragraph(B('S+'), S_TBL_C), Paragraph('A+', S_TBL_C), Paragraph('A+', S_TBL_C)],
-        [Paragraph('ML 1순위', S_TBL), Paragraph('finesse', S_TBL_C), Paragraph('attack/finesse', S_TBL_C), Paragraph('finesse', S_TBL_C), Paragraph('finesse', S_TBL_C)],
-        [Paragraph('ML 확신도', S_TBL), Paragraph('56%', S_TBL_C), Paragraph('46%/46%', S_TBL_C), Paragraph('60%', S_TBL_C), Paragraph('48%', S_TBL_C)],
-        [Paragraph('주요 약점', S_TBL), Paragraph('Finesse', S_TBL_C), Paragraph('(균형형)', S_TBL_C), Paragraph('속도+정확도', S_TBL_C), Paragraph('속도+정확도', S_TBL_C)],
+        [Paragraph('PPS', S_TBL), Paragraph('1.83', S_TBL_C), Paragraph(B('2.36'), S_TBL_C), Paragraph('1.62', S_TBL_C), Paragraph('1.56', S_TBL_C)],
+        [Paragraph('APM', S_TBL), Paragraph('51.0', S_TBL_C), Paragraph('54.1', S_TBL_C), Paragraph('53.9', S_TBL_C), Paragraph('50.9', S_TBL_C)],
+        [Paragraph('T-Spin%', S_TBL), Paragraph('4.82', S_TBL_C), Paragraph('4.33', S_TBL_C), Paragraph('4.54', S_TBL_C), Paragraph('1.55', S_TBL_C)],
+        [Paragraph('Fault%', S_TBL), Paragraph('57.7', S_TBL_C), Paragraph(B('6.8'), S_TBL_C), Paragraph('36.6', S_TBL_C), Paragraph('17.9', S_TBL_C)],
+        [Paragraph('추정 티어', S_TBL), Paragraph('S', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('A+', S_TBL_C), Paragraph('A', S_TBL_C)],
+        [Paragraph('ML 1순위', S_TBL), Paragraph('attack/finesse', S_TBL_C), Paragraph(B('balanced'), S_TBL_C), Paragraph(B('attack'), S_TBL_C), Paragraph(B('speed'), S_TBL_C)],
+        [Paragraph('ML 확신도', S_TBL), Paragraph('0.46/0.46', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.41', S_TBL_C), Paragraph('0.58', S_TBL_C)],
+        [Paragraph('처방 초점', S_TBL), Paragraph('정확도+공격', S_TBL_C), Paragraph('유지관리', S_TBL_C), Paragraph('공격 빌드', S_TBL_C), Paragraph('속도', S_TBL_C)],
     ]
     tbl_c = Table(comp_data, colWidths=[60, 75, 75, 75, 75])
     tbl_c.setStyle(TableStyle([
@@ -397,15 +415,34 @@ def build():
         ('TOPPADDING', (0, 0), (-1, -1), 3),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 5] 4명 플레이어의 다중 비교 분석'), S_H3))
+    story.append(Paragraph(I('[Table 5] 4명 플레이어의 다중 비교 분석 (검증 가능 데이터)'), S_H3))
     story.append(tbl_c)
     story.append(Paragraph(
-        '4명의 플레이어는 각각 다른 강점/약점 프로필을 보이며, 하이브리드 ML 모델은 이를 차별화된 예측으로 변환하였다. '
-        'Player A은 attack/finesse가 46%/46%로 동률이어 균형형 플레이어로 판별되었고, '
-        'Player B은 finesse(60%)로 명확한 1순위 약점이 식별되었다. '
-        'Subject P은 finesse(56%)로 Fault 55.8%와 일치하는 진단이 내려졌다. '
-        '이전 버전(모든 플레이어가 defense로 수렴)과 달리, 하이브리드 접근은 ML의 데이터 분포 학습과 '
-        '규칙 기반의 도메인 지식을 결합하여 플레이어별 차별화된 진단을 가능하게 하였다.',
+        '서로 다른 지표 프로필을 가진 4명의 플레이어에 대해, 하이브리드 ML 모델은 '
+        '4가지 상이한 1순위 약점을 예측하였다: Player A(Fault 6.8%로 정확도 우수, PPS 2.36)는 "balanced"(0.58), '
+        'Player B(Fault 36.6%, 중속)는 "attack"(0.41), Player C(PPS 1.56로 저속, T-Spin 1.55%)는 "speed"(0.58), '
+        'Subject P(Fault 57.7%)는 "attack/finesse"가 0.46으로 동률을 이루었다. '
+        '예측 결과가 입력 프로필의 차이(정확도·속도·T-Spin 활용도)에 따라 명확히 분화함을 확인할 수 있다.',
+        S_BODY))
+    story.append(Paragraph(
+        B('약점 수렴에 대한 오류 분석 (Error Analysis):') + ' 본 연구의 예비 분석에서, '
+        '동일한 좁은 스킬 구간(S~SS)에서 Finesse Fault가 유사하게 높은(54~58%) 플레이어들만을 대상으로 했을 때 '
+        '예측이 finesse로 수렴하는 현상이 관찰되었다. 이는 모델 자체의 편향이라기보다, '
+        '하이브리드 예측에서 규칙 기반 점수(가중치 0.6)가 지배적인 구조에서 입력군의 공통 약점이 '
+        '그대로 반영된 결과이다. [Table 5]와 같이 정확도·속도·T-Spin 활용도가 이질적인 플레이어들을 '
+        '입력하면 예측이 balanced/attack/speed/finesse로 정상 분화하므로, '
+        '수렴 현상은 입력 표본의 동질성에 기인한 것임을 확인하였다. '
+        '다만 규칙 기반 가중치(0.6)가 ML(0.4)보다 높아 경계선 사례에서 규칙 점수가 우세한 구조적 특성이 '
+        '존재하며, 전 티어 학습 데이터 확보 시 ML 가중치를 상향하여 데이터 주도 분류를 강화할 수 있다.',
+        S_BODY))
+    story.append(Paragraph(
+        B('최종 처방의 질적 대조:') + ' ML 1순위가 다른 플레이어 간에는 후속 파이프라인의 처방이 '
+        '명확히 갈린다. "balanced"로 판정된 Player A에게는 20분 루틴 첫 단계로 "TKI 오프닝 패턴 10회 반복"(공격 빌드 숙련)이, '
+        '"speed"로 판정된 Player C에게는 "40L 스프린트 3회 — 속도 감각 워밍업"이 우선 배치되었다. '
+        '또한 추정 티어(S/S/A+/A)에 따라 빌드 추천 집합이 달라져, '
+        'Player A·B에게는 PCO·Hachispin 등 고난도 오프닝이, Player C에게는 STSD 중심의 기초 빌드가 제시되었다. '
+        '이로써 ML 라벨 → 티어 추정 → 빌드 매트릭스 → 약점 우선순위의 조합이 '
+        '플레이어별로 질적으로 상이한 훈련 처방을 생성함을 실증하였다.',
         S_BODY))
 
     # Case 5: Tier benchmark comparison
@@ -473,8 +510,12 @@ def build():
     story.append(Paragraph('- 라벨링 방법론: K-Means 클러스터링이 규칙 기반 라벨링의 순환 논리를 개선하였으나, '
         '인간 전문가(코치)의 교차 검증을 거친 골드 스탠다드 라벨과의 비교 검증이 필요함', S_BULLET))
     story.append(Paragraph('- 보드 시뮬레이터: DAS/ARR 타이밍 불일치로 라인 클리어 재현 정확도 제한', S_BULLET))
+    story.append(Paragraph('- 하이브리드 예측 구조: 규칙 기반 가중치(60%)가 ML(40%)보다 높아, '
+        '분석 대상 그룹의 공통 약점(높은 Finesse Fault)이 있을 경우 동일 라벨로 수렴하는 경향이 관찰됨. '
+        '전 티어 학습 데이터 확보 시 ML 비중을 높여 개선 가능', S_BULLET))
     story.append(Paragraph('- 사용자 연구(User Study) 부재: 처방적 피드백의 실효성을 정량적으로 검증하기 위해 '
-        '최소한 소규모 파일럿 테스트(티어별 2~3명, TR 변화 추적)가 필요하나 본 연구에서는 수행하지 못함', S_BULLET))
+        '최소한 소규모 파일럿 테스트(티어별 2~3명, TR 변화 추적)가 필요하나 본 연구에서는 수행하지 못함. '
+        '본 논문의 사례 분석은 간접적 사후적 정합성 검증에 해당함', S_BULLET))
 
     story.append(Paragraph('5.3 윤리적 고려사항', S_H2))
     story.append(Paragraph(
@@ -486,7 +527,7 @@ def build():
         '향후 사용자 연구 수행 시에는 IRB(기관생명윤리위원회) 승인 절차를 거칠 것을 명시한다.',
         S_BODY))
 
-    story.append(Paragraph('5.3 향후 연구', S_H2))
+    story.append(Paragraph('5.4 향후 연구', S_H2))
     story.append(Paragraph('- Cold Clear 2(Rust) 직접 빌드를 통한 배치 정확도 비교 시스템 완성', S_BULLET))
     story.append(Paragraph('- TETR.IO 봇 계정 확보를 통한 전 티어 리플레이 수집 및 모델 재학습', S_BULLET))
     story.append(Paragraph('- A/B 사용자 연구: TetrioCoach 사용 그룹 vs 미사용 그룹의 TR 변화 추적', S_BULLET))
@@ -500,9 +541,9 @@ def build():
     story.append(Paragraph(
         '본 연구는 테트리스 AI 코칭이라는 새로운 연구 영역에서, '
         '대규모 리플레이 데이터 분석 -> ML 기반 약점 분류 -> 도메인 지식 기반 처방적 피드백 생성이라는 '
-        '완전한 파이프라인을 설계, 구현, 검증하였다. '
+        '완전한 파이프라인을 설계, 구현하고 사례 분석을 통해 시스템의 일관성을 간접 검증하였다. '
         '4,087줄의 시스템은 외부 LLM 없이 독립적으로 동작하며, '
-        '61,935매치 실제 데이터로 학습된 모델은 99.6%의 약점 분류 정확도를 달성하였다. '
+        '61,935매치 실제 데이터를 K-Means 클러스터링으로 라벨링하고 학습한 분류기는 Macro F1-score 0.960을 달성하였다. '
         '16개 빌드 패턴과 11개 티어의 교차 추천 매트릭스를 통해 초급부터 최상위까지 '
         '모든 수준의 플레이어에게 맞춤형 코칭을 제공한다. '
         '이 프레임워크는 테트리스를 넘어 리플레이 기반 경쟁 게임의 자동 코칭에 일반화될 수 있으며, '
@@ -539,7 +580,7 @@ def build():
     story.append(Paragraph('4계층(Data Acquisition -> Statistical Analysis -> AI Intelligence -> Feedback Generation) 구조. 각 계층에 소속 모듈과 데이터 흐름 표시. 본 논문 개요 작성 시 생성된 SVG 다이어그램을 기반으로 고해상도 벡터 이미지로 제작.', S_BODY))
 
     story.append(Paragraph('A.2 Fig. 2 - Feature Importance 분석', S_H3))
-    story.append(Paragraph('(a) 수평 바 차트: 10개 특성의 중요도 순위. tspin_rate(73.9%) 강조. (b) Confusion Matrix(5x5): speed/attack/tspin/defense/balanced. (c) ROC Curve: multi-class, one-vs-rest.', S_BODY))
+    story.append(Paragraph('(a) 수평 바 차트: 10개 특성의 중요도 순위. lines_per_piece(28.6%), rating_norm(21.7%), max_btb(15.9%) 순으로 강조. 이전 버전의 tspin_rate(73.9%) 과적합과 대비하여 다차원 분포로 개선되었음을 시각적으로 제시. (b) Confusion Matrix(4x4): attack/defense/speed/tspin. (c) ROC Curve: multi-class, one-vs-rest.', S_BODY))
 
     story.append(Paragraph('A.3 Fig. 3 - 피드백 생성 파이프라인', S_H3))
     story.append(Paragraph('입력(ttrm/API) -> 파싱 -> 집계 -> [ML 분류기 + 규칙 평가기 + 빌드 DB] -> 코칭 + 로드맵 + 매치업. 각 단계의 데이터 변환과 추상화 수준을 시각화.', S_BODY))
