@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.spec
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Build artifacts
+_temp_pcc/
+
+# Large data (use Kaggle link instead)
+training/data/match_records.json
+training/data/leaderboard.json
+*.csv
+*.csv.xz
+
+# Claude Code config
+.claude/
+
+# Cached Kaggle data
+.cache/

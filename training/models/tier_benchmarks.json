@@ -1,0 +1,53 @@
+{
+  "X+": {
+    "count": 20000,
+    "mean": {
+      "pps": 2.826,
+      "apm_est": 37.503,
+      "tspin_rate": 0.472,
+      "quad_rate": 4.162,
+      "lines_per_piece": 0.49,
+      "max_combo": 3.926,
+      "max_btb": 5.215,
+      "max_height": 18.625,
+      "defense_ratio": 0.0,
+      "rating_norm": 24.876
+    },
+    "std": {
+      "pps": 0.565,
+      "apm_est": 11.514,
+      "tspin_rate": 0.88,
+      "quad_rate": 2.453,
+      "lines_per_piece": 0.128,
+      "max_combo": 2.03,
+      "max_btb": 3.358,
+      "max_height": 4.31,
+      "defense_ratio": 0.0,
+      "rating_norm": 0.094
+    },
+    "p25": {
+      "pps": 2.46,
+      "apm_est": 31.607,
+      "tspin_rate": 0.0,
+      "quad_rate": 2.532,
+      "lines_per_piece": 0.4,
+      "max_combo": 2.0,
+      "max_btb": 3.0,
+      "max_height": 17.0,
+      "defense_ratio": 0.0,
+      "rating_norm": 24.797
+    },
+    "p75": {
+      "pps": 3.153,
+      "apm_est": 44.899,
+      "tspin_rate": 0.735,
+      "quad_rate": 5.882,
+      "lines_per_piece": 0.582,
+      "max_combo": 5.0,
+      "max_btb": 7.0,
+      "max_height": 22.0,
+      "defense_ratio": 0.0,
+      "rating_norm": 24.963
+    }
+  }
+}

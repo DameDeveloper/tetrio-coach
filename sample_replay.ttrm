@@ -1,0 +1,122 @@
+{
+  "ts": "2024-06-15T14:30:00.000Z",
+  "gametype": "league",
+  "ismulti": true,
+  "endcontext": [
+    [
+      {
+        "username": "창호",
+        "apm": 87.4,
+        "pps": 2.31,
+        "vs": 148.2,
+        "inputs": 412,
+        "piecesplaced": 178,
+        "lines": 22,
+        "garbagesent": 14,
+        "garbagereceived": 8,
+        "success": true,
+        "finaltime": 46200,
+        "clears": {
+          "singles": 3, "doubles": 2, "triples": 0, "quads": 2,
+          "tspin_singles": 1, "tspin_doubles": 3, "tspin_triples": 0, "tspins": 0
+        },
+        "finesse": { "faults": 7, "perfectpieces": 171 }
+      },
+      {
+        "username": "opponent",
+        "apm": 92.1,
+        "pps": 2.45,
+        "vs": 154.8,
+        "inputs": 428,
+        "piecesplaced": 182,
+        "lines": 0,
+        "garbagesent": 8,
+        "garbagereceived": 14,
+        "success": false,
+        "finaltime": 46200,
+        "clears": {
+          "singles": 4, "doubles": 3, "triples": 0, "quads": 1,
+          "tspin_singles": 0, "tspin_doubles": 2, "tspin_triples": 0, "tspins": 0
+        },
+        "finesse": { "faults": 5, "perfectpieces": 177 }
+      }
+    ],
+    [
+      {
+        "username": "창호",
+        "apm": 79.8,
+        "pps": 2.18,
+        "vs": 135.5,
+        "inputs": 389,
+        "piecesplaced": 162,
+        "lines": 0,
+        "garbagesent": 9,
+        "garbagereceived": 16,
+        "success": false,
+        "finaltime": 51800,
+        "clears": {
+          "singles": 5, "doubles": 1, "triples": 0, "quads": 1,
+          "tspin_singles": 1, "tspin_doubles": 1, "tspin_triples": 0, "tspins": 0
+        },
+        "finesse": { "faults": 12, "perfectpieces": 150 }
+      },
+      {
+        "username": "opponent",
+        "apm": 95.3,
+        "pps": 2.52,
+        "vs": 161.2,
+        "inputs": 445,
+        "piecesplaced": 192,
+        "lines": 24,
+        "garbagesent": 16,
+        "garbagereceived": 9,
+        "success": true,
+        "finaltime": 51800,
+        "clears": {
+          "singles": 2, "doubles": 1, "triples": 0, "quads": 3,
+          "tspin_singles": 2, "tspin_doubles": 4, "tspin_triples": 1, "tspins": 0
+        },
+        "finesse": { "faults": 3, "perfectpieces": 189 }
+      }
+    ],
+    [
+      {
+        "username": "창호",
+        "apm": 91.2,
+        "pps": 2.39,
+        "vs": 152.7,
+        "inputs": 421,
+        "piecesplaced": 175,
+        "lines": 20,
+        "garbagesent": 13,
+        "garbagereceived": 11,
+        "success": true,
+        "finaltime": 48900,
+        "clears": {
+          "singles": 2, "doubles": 2, "triples": 0, "quads": 2,
+          "tspin_singles": 2, "tspin_doubles": 2, "tspin_triples": 0, "tspins": 0
+        },
+        "finesse": { "faults": 9, "perfectpieces": 166 }
+      },
+      {
+        "username": "opponent",
+        "apm": 88.7,
+        "pps": 2.28,
+        "vs": 145.3,
+        "inputs": 408,
+        "piecesplaced": 169,
+        "lines": 0,
+        "garbagesent": 11,
+        "garbagereceived": 13,
+        "success": false,
+        "finaltime": 48900,
+        "clears": {
+          "singles": 3, "doubles": 2, "triples": 1, "quads": 1,
+          "tspin_singles": 0, "tspin_doubles": 1, "tspin_triples": 0, "tspins": 0
+        },
+        "finesse": { "faults": 8, "perfectpieces": 161 }
+      }
+    ]
+  ],
+  "replay": {}
+}
