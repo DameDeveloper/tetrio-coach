@@ -162,37 +162,84 @@ def predict_weakness(agg: dict) -> dict:
 
     if n_features == len(KAGGLE_FEATURE_KEYS):
         pps = agg.get('avg_pps', 0)
-        apm = agg.get('avg_apm', 0)
         total_pieces = max(agg.get('total_pieces', 1), 1)
+        total_rounds = max(agg.get('rounds', 1), 1)
+        total_lines = agg.get('total_lines', 0)
+
+        total_garbage_sent = agg.get('avg_garbage_sent', 0) * total_rounds
+        apm_est = (total_garbage_sent / total_pieces) * 60 if total_pieces > 0 else 0
+
+        tspin_rate_kaggle = agg.get('total_tspin', 0) / total_pieces * 100
+
         features = np.array([[
             pps,
-            apm,
-            agg.get('tspin_rate', 0),
+            apm_est,
+            tspin_rate_kaggle,
             agg.get('total_quads', 0) / total_pieces * 100,
-            agg.get('total_lines', 0) / total_pieces,
+            total_lines / total_pieces if total_pieces > 0 else 0,
             agg.get('max_combo', 0),
             agg.get('max_btb', 0),
             20,
             agg.get('avg_garbage_sent', 0) / max(agg.get('avg_garbage_recv', 1), 1),
-            15,
+            scaler.mean_[9] if hasattr(scaler, 'mean_') else 24.0,
         ]])
     else:
         features = np.array([[agg.get(k, 0) for k in FEATURE_KEYS]])
 
     X_scaled = scaler.transform(features)
-    prediction = clf.predict(X_scaled)[0]
     probas = clf.predict_proba(X_scaled)[0]
     classes = clf.classes_
+    ml_prob = {cls: round(float(p), 3) for cls, p in zip(classes, probas)}
 
-    prob_dict = {cls: round(float(p), 3) for cls, p in zip(classes, probas)}
-    sorted_weaknesses = sorted(prob_dict.items(), key=lambda x: x[1], reverse=True)
+    rule_scores = _rule_based_scores(agg)
+
+    combined = {}
+    all_labels = set(list(ml_prob.keys()) + list(rule_scores.keys()))
+    for label in all_labels:
+        ml_p = ml_prob.get(label, 0)
+        rule_p = rule_scores.get(label, 0)
+        combined[label] = round(0.4 * ml_p + 0.6 * rule_p, 3)
+
+    sorted_combined = sorted(combined.items(), key=lambda x: x[1], reverse=True)
+    primary = sorted_combined[0][0] if sorted_combined else 'balanced'
+    confidence = sorted_combined[0][1] if sorted_combined else 0
 
     return {
-        'primary': prediction,
-        'probabilities': prob_dict,
-        'confidence': round(float(max(probas)), 3),
-        'top3': [(k, v) for k, v in sorted_weaknesses[:3]],
+        'primary': primary,
+        'probabilities': combined,
+        'ml_raw': ml_prob,
+        'rule_raw': rule_scores,
+        'confidence': round(confidence, 3),
+        'top3': [(k, v) for k, v in sorted_combined[:3]],
     }
+
+
+def _rule_based_scores(agg: dict) -> dict:
+    """통계 기반 약점 확률 점수 (0~1)."""
+    pps = agg.get('avg_pps', 0)
+    apm = agg.get('avg_apm', 0)
+    tsr = agg.get('tspin_rate', 0)
+    fr = agg.get('finesse_fault_rate', 0)
+    sent = agg.get('avg_garbage_sent', 0)
+    recv = agg.get('avg_garbage_recv', 0)
+    has_detail = agg.get('has_detail', False)
+
+    scores = {}
+    scores['speed'] = max(0, min(1, (2.0 - pps) / 1.0)) if pps < 2.0 else 0
+    scores['attack'] = max(0, min(1, (55 - apm) / 30)) if apm < 55 else 0
+    scores['tspin'] = max(0, min(1, (2.0 - tsr) / 2.0)) if tsr < 2.0 else 0
+    if has_detail:
+        scores['finesse'] = max(0, min(1, (fr - 15) / 40)) if fr > 15 else 0
+    else:
+        scores['finesse'] = 0
+    scores['defense'] = max(0, min(1, (recv - sent) / max(sent, 1) * 0.5)) if recv > sent else 0
+    scores['balanced'] = max(0, 1 - max(scores.values())) if scores else 0.5
+
+    total = sum(scores.values())
+    if total > 0:
+        scores = {k: round(v / total, 3) for k, v in scores.items()}
+
+    return scores
 
 
 def retrain_from_collected_data(data_path: str | Path = None):
