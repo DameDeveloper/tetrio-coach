@@ -292,12 +292,102 @@ def build():
     story.append(Spacer(1, 8))
 
     story.append(Paragraph('4.3 사례 연구', S_H2))
+
+    # Case 1: 종단 성장 추이
+    story.append(Paragraph(B('사례 1: 플레이어 종단 성장 추이 분석 (lazy_ningen, 1년간 37매치)'), S_H3))
     story.append(Paragraph(
-        '실제 플레이어 lazy_ningen의 16라운드(1,908피스) 데이터를 분석한 결과: '
-        'ML 모델은 "finesse" 약점을 82% 확신도로 예측하였으며, 이는 Finesse Fault 55.8%라는 '
-        '실측 데이터와 일치하였다. 시스템은 추정 티어 S 기준으로 TKI, DT Cannon, Hachispin, STSD를 추천하고, '
-        'Finesse 개선을 최우선 드릴로 포함한 20분 맞춤 루틴을 생성하였다. '
-        '코칭 리포트 8개 섹션(65줄), 훈련 로드맵 6개 섹션이 100ms 이내에 생성되었다.',
+        '동일 플레이어의 1년간 리플레이 데이터(37개 .ttrm 파일)를 초기(2025-06~08), '
+        '중기(2025-12~2026-03), 최근(2026-06) 세 구간으로 분할하여 분석하였다.',
+        S_BODY))
+
+    # Growth table
+    growth_data = [
+        [Paragraph(B('구간'), S_TBL_H), Paragraph(B('Rounds'), S_TBL_H), Paragraph(B('APM'), S_TBL_H),
+         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('승률'), S_TBL_H), Paragraph(B('T-Spin%'), S_TBL_H),
+         Paragraph(B('Fault%'), S_TBL_H), Paragraph(B('ML 예측'), S_TBL_H)],
+        [Paragraph('초기 (2025-06~08)', S_TBL), Paragraph('31', S_TBL_C), Paragraph('49.3', S_TBL_C),
+         Paragraph('1.81', S_TBL_C), Paragraph('54.8%', S_TBL_C), Paragraph('4.1%', S_TBL_C),
+         Paragraph('61.3%', S_TBL_C), Paragraph('defense', S_TBL_C)],
+        [Paragraph('중기 (2025-12~2026-03)', S_TBL), Paragraph('41', S_TBL_C), Paragraph('45.9', S_TBL_C),
+         Paragraph('1.75', S_TBL_C), Paragraph('56.1%', S_TBL_C), Paragraph('3.9%', S_TBL_C),
+         Paragraph('58.3%', S_TBL_C), Paragraph('defense', S_TBL_C)],
+        [Paragraph(B('최근 (2026-06)'), S_TBL), Paragraph(B('16'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C),
+         Paragraph(B('1.92'), S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph(B('4.3%'), S_TBL_C),
+         Paragraph(B('55.8%'), S_TBL_C), Paragraph(B('defense'), S_TBL_C)],
+    ]
+    tbl_g = Table(growth_data, colWidths=[95, 42, 38, 35, 40, 42, 42, 50])
+    tbl_g.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG),
+        ('BACKGROUND', (0, -1), (-1, -1), HexColor('#e8f0fe')),
+        ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+    ]))
+    story.append(Paragraph(I('[Table 4] 플레이어 lazy_ningen의 종단 성장 추이 (1년간)'), S_H3))
+    story.append(tbl_g)
+    story.append(Paragraph(
+        '1년간 APM이 49.3에서 55.1로, PPS가 1.81에서 1.92로, 승률이 54.8%에서 62.5%로 상승하였다. '
+        'Finesse Fault는 61.3%에서 55.8%로 개선되었으나 여전히 심각 수준이며, '
+        '세 구간 모두에서 ML 모델이 일관되게 "defense" 약점을 예측하였다. '
+        '이는 플레이어의 공격/속도가 점진적으로 향상되는 반면, '
+        '근본적 약점(Finesse)이 장기간 지속됨을 보여주어 코칭 시스템의 "지속 모니터링" 기능의 필요성을 시사한다.',
+        S_BODY))
+    story.append(Spacer(1, 6))
+
+    # Case 2: 고수준 상대 (약점 없음)
+    story.append(Paragraph(B('사례 2: 고수준 상대 플레이어 분석 (kidonredbull)'), S_H3))
+    story.append(Paragraph(
+        '8라운드(905피스) 분석 결과, PPS 2.28, APM 57.8, T-Spin율 5.86%, Finesse Fault 22.8%로 '
+        '규칙 기반 평가기가 약점을 검출하지 않았다(WeaknessReport 0건). '
+        'ML 모델도 "defense"를 예측하였으나, 실제로는 균형 잡힌 상위 플레이어에 해당한다. '
+        '추정 티어 S+ 기준으로 TKI, DT Cannon, PCO, Hachispin, STSD를 추천하며, '
+        '"현재 수준을 유지하면서 다음 티어를 목표"라는 유지 관리형 피드백을 생성하였다. '
+        '이는 시스템이 약점 부재 사례에서도 적절한 응답을 생성함을 보여준다.',
+        S_BODY))
+    story.append(Spacer(1, 6))
+
+    # Case 3: 특화형 플레이어
+    story.append(Paragraph(B('사례 3: T-Spin 특화형 저속 플레이어 분석 (jjleesuwan)'), S_H3))
+    story.append(Paragraph(
+        '7라운드(774피스) 분석 결과, PPS 1.49(저속), APM 53.5, T-Spin율 6.98%(고활용), '
+        'Finesse Fault 40.6%. 규칙 기반 평가기는 "속도 향상 필요", "공격 전개 약함", "배치 정확도 개선 필요"를 '
+        '순서대로 검출하였다. 흥미로운 점은 T-Spin 활용도(6.98%)가 높음에도 불구하고 '
+        '낮은 PPS(1.49)로 인해 전체 APM이 제한되는 패턴으로, '
+        '시스템은 "속도를 먼저 올린 후 기존 T-Spin 능력을 결합"하라는 단계적 처방을 생성하였다.',
+        S_BODY))
+    story.append(Spacer(1, 6))
+
+    # Case 4: 비교 분석
+    story.append(Paragraph(B('사례 4: 다중 플레이어 비교 분석'), S_H3))
+    comp_data = [
+        [Paragraph(B('지표'), S_TBL_H), Paragraph(B('lazy_ningen'), S_TBL_H),
+         Paragraph(B('kidonredbull'), S_TBL_H), Paragraph(B('jjleesuwan'), S_TBL_H), Paragraph(B('goalf'), S_TBL_H)],
+        [Paragraph('PPS', S_TBL), Paragraph('1.92', S_TBL_C), Paragraph(B('2.28'), S_TBL_C), Paragraph('1.49', S_TBL_C), Paragraph('1.57', S_TBL_C)],
+        [Paragraph('APM', S_TBL), Paragraph('55.1', S_TBL_C), Paragraph(B('57.8'), S_TBL_C), Paragraph('53.5', S_TBL_C), Paragraph('49.6', S_TBL_C)],
+        [Paragraph('T-Spin%', S_TBL), Paragraph('4.3', S_TBL_C), Paragraph('5.86', S_TBL_C), Paragraph(B('6.98'), S_TBL_C), Paragraph(B('7.41'), S_TBL_C)],
+        [Paragraph('Fault%', S_TBL), Paragraph('55.8', S_TBL_C), Paragraph(B('22.8'), S_TBL_C), Paragraph('40.6', S_TBL_C), Paragraph('45.6', S_TBL_C)],
+        [Paragraph('승률', S_TBL), Paragraph('62.5%', S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph('28.6%', S_TBL_C), Paragraph('28.6%', S_TBL_C)],
+        [Paragraph('추정 티어', S_TBL), Paragraph('S', S_TBL_C), Paragraph(B('S+'), S_TBL_C), Paragraph('A+', S_TBL_C), Paragraph('A+', S_TBL_C)],
+        [Paragraph('ML 1순위', S_TBL), Paragraph('defense', S_TBL_C), Paragraph('defense', S_TBL_C), Paragraph('defense', S_TBL_C), Paragraph('defense', S_TBL_C)],
+        [Paragraph('주요 약점', S_TBL), Paragraph('Finesse', S_TBL_C), Paragraph('(없음)', S_TBL_C), Paragraph('속도+정확도', S_TBL_C), Paragraph('속도+정확도', S_TBL_C)],
+    ]
+    tbl_c = Table(comp_data, colWidths=[60, 75, 75, 75, 75])
+    tbl_c.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG),
+        ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+    ]))
+    story.append(Paragraph(I('[Table 5] 4명 플레이어의 다중 비교 분석'), S_H3))
+    story.append(tbl_c)
+    story.append(Paragraph(
+        '4명의 플레이어는 각각 다른 강점/약점 프로필을 보이며, TetrioCoach는 이를 차별화된 피드백으로 변환하였다. '
+        'kidonredbull은 모든 지표가 균형적이어 약점이 검출되지 않았고, jjleesuwan과 goalf는 T-Spin 활용도가 높으나 '
+        '속도와 정확도가 부족한 유사 패턴을 보였다. lazy_ningen은 중간 수준의 균형형이지만 Finesse가 핵심 병목으로 '
+        '일관되게 식별되었다. 이 결과는 시스템이 다양한 플레이어 유형에 대해 일관성 있으면서도 차별화된 진단을 '
+        '생성할 수 있음을 실증한다.',
         S_BODY))
 
     # ═══════════════════════════════════════
