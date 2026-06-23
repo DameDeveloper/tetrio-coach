@@ -1,0 +1,18 @@
+{
+  "accuracy": 0.9623,
+  "macro_f1": 0.9596,
+  "weighted_f1": 0.9622,
+  "cv_macro_f1_mean": 0.9561,
+  "cv_macro_f1_std": 0.0024,
+  "label_method": "kmeans_clustering_with_profile_mapping",
+  "n_clusters": 6,
+  "oversampling": "noise_injection_min_ratio_0.10",
+  "class_distribution": {
+    "speed": 5083,
+    "defense": 5532,
+    "attack": 6466,
+    "tspin": 2919
+  },
+  "n_train": 16000,
+  "n_test": 4000
+}
