@@ -85,8 +85,9 @@ def build():
         'transition from descriptive statistics to prescriptive feedback.',
         S_ABSTRACT))
     story.append(Paragraph(
-        f'{B("Keywords")}: Tetris AI, automated coaching, replay analysis, weakness classification, machine learning, '
-        'esports, prescriptive feedback, build patterns',
+        f'{B("Keywords")}: game AI, player modeling, replay analysis, unsupervised clustering, gradient boosting, '
+        'skill calibration, prescriptive feedback, domain-knowledge-based recommendation, esports analytics, '
+        'human-AI interaction',
         S_KW))
     story.append(hr())
 
@@ -448,90 +449,100 @@ def build():
         S_BODY))
     story.append(Spacer(1, 6))
 
-    # Case 4
-    story.append(Paragraph(B('Case 4: Multi-Player Comparative Analysis'), S_H3))
+    # Case 4 (N=38)
+    story.append(Paragraph(B('Case 4: Multi-Player Comparative Analysis (N=38)'), S_H3))
+    story.append(Paragraph(
+        B('Sample selection criterion.') + ' From the author&#39;s local match archive (37 .ttrm files), all 37 distinct '
+        'opponents with at least 6 rounds (one full match) of data were selected after nickname deduplication, and Subject '
+        'P (recent period) was added, for a total of N=38. The sample thus follows an objective criterion&#8212;"every '
+        'opponent in the archive with sufficient data"&#8212;rather than hand-picking. The sample spans a wide range: PPS '
+        '1.38&#8211;2.37, APM 31.8&#8211;95.7, and finesse fault 6.8&#8211;70.0%.',
+        S_BODY))
+    story.append(Paragraph(
+        B('Distribution of ML top-1 weaknesses (N=38).') + ' attack 22 (57.9%), balanced 8 (21.1%), speed 3 (7.9%), '
+        'finesse 3 (7.9%), defense 2 (5.3%). All five weakness classes appear in the sample, confirming at the N=38 scale '
+        'that the model does not collapse to a single label but differentiates according to differences in the input '
+        'profile. The prevalence of attack (57.9%) reflects the fact that the archive consists mainly of S&#8211;S+ band '
+        'opponents, so the shared characteristic of that skill band (insufficient attack-conversion efficiency) is '
+        'reflected.',
+        S_BODY))
+    story.append(Paragraph(I('[Table 5] Representative subset spanning all five weakness classes (anonymized P1&#8211;P5 + Subject P)'), S_H3))
     comp = [
-        [Paragraph(B('Metric'), S_TBL_H), Paragraph(B('Subject P'), S_TBL_H),
-         Paragraph(B('Player A'), S_TBL_H), Paragraph(B('Player B'), S_TBL_H), Paragraph(B('Player C'), S_TBL_H)],
-        [Paragraph('PPS', S_TBL), Paragraph('1.83', S_TBL_C), Paragraph(B('2.36'), S_TBL_C), Paragraph('1.62', S_TBL_C), Paragraph('1.56', S_TBL_C)],
-        [Paragraph('APM', S_TBL), Paragraph('51.0', S_TBL_C), Paragraph('54.1', S_TBL_C), Paragraph('53.9', S_TBL_C), Paragraph('50.9', S_TBL_C)],
-        [Paragraph('T-Spin%', S_TBL), Paragraph('4.82', S_TBL_C), Paragraph('4.33', S_TBL_C), Paragraph('4.54', S_TBL_C), Paragraph('1.55', S_TBL_C)],
-        [Paragraph('Fault%', S_TBL), Paragraph('57.7', S_TBL_C), Paragraph(B('6.8'), S_TBL_C), Paragraph('36.6', S_TBL_C), Paragraph('17.9', S_TBL_C)],
-        [Paragraph('Est. tier', S_TBL), Paragraph('S', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('A+', S_TBL_C), Paragraph('A', S_TBL_C)],
-        [Paragraph('ML top-1', S_TBL), Paragraph('attack/finesse', S_TBL_C), Paragraph(B('balanced'), S_TBL_C), Paragraph(B('attack'), S_TBL_C), Paragraph(B('speed'), S_TBL_C)],
-        [Paragraph('Confidence', S_TBL), Paragraph('0.46/0.46', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.41', S_TBL_C), Paragraph('0.58', S_TBL_C)],
-        [Paragraph('Rx focus', S_TBL), Paragraph('accuracy+attack', S_TBL_C), Paragraph('maintenance', S_TBL_C), Paragraph('attack builds', S_TBL_C), Paragraph('speed', S_TBL_C)],
+        [Paragraph(B('Metric'), S_TBL_H), Paragraph(B('P1'), S_TBL_H), Paragraph(B('P2'), S_TBL_H),
+         Paragraph(B('P3'), S_TBL_H), Paragraph(B('P4'), S_TBL_H), Paragraph(B('P5'), S_TBL_H), Paragraph(B('Subj.P'), S_TBL_H)],
+        [Paragraph('PPS', S_TBL), Paragraph('2.36', S_TBL_C), Paragraph('2.33', S_TBL_C), Paragraph('1.56', S_TBL_C), Paragraph('2.05', S_TBL_C), Paragraph('1.77', S_TBL_C), Paragraph('1.92', S_TBL_C)],
+        [Paragraph('APM', S_TBL), Paragraph('54.1', S_TBL_C), Paragraph('31.8', S_TBL_C), Paragraph('50.9', S_TBL_C), Paragraph('62.7', S_TBL_C), Paragraph('50.2', S_TBL_C), Paragraph('55.1', S_TBL_C)],
+        [Paragraph('T-Spin%', S_TBL), Paragraph('4.33', S_TBL_C), Paragraph('0.0', S_TBL_C), Paragraph('1.55', S_TBL_C), Paragraph('4.39', S_TBL_C), Paragraph('1.03', S_TBL_C), Paragraph('4.3', S_TBL_C)],
+        [Paragraph('Fault%', S_TBL), Paragraph('6.8', S_TBL_C), Paragraph('43.1', S_TBL_C), Paragraph('17.9', S_TBL_C), Paragraph('42.5', S_TBL_C), Paragraph('42.1', S_TBL_C), Paragraph('55.8', S_TBL_C)],
+        [Paragraph('Tier', S_TBL), Paragraph('S+', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('S+', S_TBL_C), Paragraph('S+', S_TBL_C), Paragraph('S+', S_TBL_C)],
+        [Paragraph('ML top-1', S_TBL), Paragraph(B('bal.'), S_TBL_C), Paragraph(B('att.'), S_TBL_C), Paragraph(B('spd.'), S_TBL_C), Paragraph(B('fin.'), S_TBL_C), Paragraph(B('def.'), S_TBL_C), Paragraph(B('fin.'), S_TBL_C)],
+        [Paragraph('Conf.', S_TBL), Paragraph('0.58', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.41', S_TBL_C), Paragraph('0.35', S_TBL_C), Paragraph('0.56', S_TBL_C)],
     ]
-    tc = Table(comp, colWidths=[62, 78, 72, 72, 72])
+    tc = Table(comp, colWidths=[52, 50, 50, 50, 50, 50, 55])
     tc.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG), ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'), ('TOPPADDING', (0, 0), (-1, -1), 3), ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 5] Multi-player comparative analysis (reproducible data)'), S_H3))
     story.append(tc)
     story.append(Paragraph(
-        'For four players with distinct metric profiles, the hybrid ML model predicted four different top-1 weaknesses: '
-        'Player A (excellent accuracy at 6.8% fault, PPS 2.36) was &quot;balanced&quot; (0.58); Player B (fault 36.6%, '
-        'medium speed) was &quot;attack&quot; (0.41); Player C (slow at PPS 1.56, T-Spin 1.55%) was &quot;speed&quot; '
-        '(0.58); and Subject P (fault 57.7%) showed a tie between &quot;attack&quot; and &quot;finesse&quot; at 0.46. The '
-        'predictions thus differentiate clearly according to differences in the input profile (accuracy, speed, T-Spin '
-        'utilization).',
+        'The six representative players each exemplify one of the five weakness classes: P1 (fault 6.8%, PPS 2.36) is '
+        'balanced; P2 (no attack vehicle at 0% T-Spin) is attack; P3 (slow at PPS 1.56) is speed; P4 (fault 42.5%) is '
+        'finesse; and P5 (T-Spin 1.03%, defense-leaning) is defense. Even within the same tier band (S&#8211;S+), the '
+        'diagnosis differentiates clearly according to differences in the input profile.',
         S_BODY))
     story.append(Paragraph(
-        B('Error analysis of weakness convergence.') + ' In a preliminary analysis, when only players from the same '
-        'narrow skill band (S&#8211;SS) with similarly high finesse faults (54&#8211;58%) were considered, the predictions '
-        'were observed to converge to finesse. Rather than a bias of the model itself, this is a consequence of the input '
-        'group&#39;s shared weakness being faithfully reflected under a structure in which the rule-based score (weight '
-        '0.6) is dominant in the hybrid prediction. As shown in Table 5, when players with heterogeneous accuracy, speed, '
-        'and T-Spin utilization are provided as input, the predictions normally diverge into balanced/attack/speed/finesse; '
-        'the convergence phenomenon is therefore confirmed to stem from the homogeneity of the input sample. That said, a '
-        'structural characteristic remains whereby, because the rule-based weight (0.6) exceeds that of the ML model (0.4), '
-        'the rule score prevails in borderline cases; securing all-tier training data would allow the ML weight to be '
-        'raised to strengthen data-driven classification.',
+        B('Error analysis of the weakness distribution.') + ' The majority share of attack (57.9%) at N=38 is not a model '
+        'bias but stems from the skill-band homogeneity of the sample (mostly S&#8211;S+). Within the same band, a subset '
+        'with uniformly high finesse faults tends to converge to finesse; however, when players with heterogeneous '
+        'accuracy, speed, and T-Spin utilization are included (Table 5), the predictions diverge normally into the five '
+        'classes balanced/attack/speed/finesse/defense. A structural characteristic nonetheless remains: because the '
+        'rule-based weight (0.6) exceeds that of the ML model (0.4), the rule score prevails in borderline cases; securing '
+        'all-tier training data would allow the ML weight to be raised to strengthen data-driven classification.',
         S_BODY))
     story.append(Paragraph(
         B('Qualitative contrast of final prescriptions.') + ' Between players with different ML top-1 labels, the '
-        'downstream prescriptions diverge clearly. For Player A (judged &quot;balanced&quot;), the first step of the '
-        '20-minute routine was &quot;10 repetitions of the TKI opener pattern&quot; (mastering attack builds), whereas for '
-        'Player C (judged &quot;speed&quot;), &quot;three 40L sprints as a speed-sense warm-up&quot; was placed first. '
-        'In addition, the build-recommendation set varied by estimated tier (S/S/A+/A): high-difficulty openers such as '
-        'PCO and Hachispin were presented to Players A and B, while a foundational STSD-centered build set was presented '
-        'to Player C. This demonstrates that the combination of ML label &#8594; tier estimation &#8594; build matrix '
-        '&#8594; weakness priority generates qualitatively distinct training prescriptions per player.',
+        'downstream prescriptions diverge clearly. For P1 (judged &quot;balanced&quot;), the first step of the 20-minute '
+        'routine was &quot;10 repetitions of the TKI opener pattern&quot; (mastering attack builds); for P3 (judged '
+        '&quot;speed&quot;), &quot;three 40L sprints as a speed-sense warm-up&quot;; and for P2 (judged &quot;attack&quot;), '
+        'opener-build study was placed first. This demonstrates that the combination of ML label &#8594; tier estimation '
+        '&#8594; build matrix &#8594; weakness priority generates qualitatively distinct training prescriptions per player.',
         S_BODY))
 
     # Case 5
-    story.append(Paragraph(B('Case 5: Subject P&#39;s Growth Against the S&#8211;U Tier Benchmark'), S_H3))
+    story.append(Paragraph(B('Case 5: Subject P&#39;s Growth Against the All-Tier Benchmark (Table 3)'), S_H3))
     story.append(Paragraph(
-        'Ten players were randomly sampled from each of the S, S+, SS, and U tiers via the public TETR.IO leaderboard API, '
-        'their mean statistics were computed, and they were compared against Subject P&#39;s longitudinal growth trajectory.',
+        'From the empirical all-tier benchmark collected in Section 3.2.1 (Table 3, 1,080 players), we extracted the '
+        'A&#8211;SS range spanned by Subject P&#39;s growth trajectory and compared the longitudinal change in position. '
+        'The benchmark figures use the same authoritative data as Table 3 (removing the noise of the earlier partial '
+        'S&#8211;U sample).',
         S_BODY))
     bench = [
         [Paragraph(B('Group/Tier'), S_TBL_H), Paragraph(B('TR'), S_TBL_H), Paragraph(B('APM'), S_TBL_H),
-         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('VS'), S_TBL_H), Paragraph(B('Win%'), S_TBL_H), Paragraph(B('n'), S_TBL_H)],
-        [Paragraph('S tier avg', S_TBL), Paragraph('14,996', S_TBL_C), Paragraph('39.7', S_TBL_C), Paragraph('1.45', S_TBL_C), Paragraph('86.5', S_TBL_C), Paragraph('45.3%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('S+ tier avg', S_TBL), Paragraph('16,276', S_TBL_C), Paragraph('42.9', S_TBL_C), Paragraph('1.43', S_TBL_C), Paragraph('96.7', S_TBL_C), Paragraph('24.8%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('SS tier avg', S_TBL), Paragraph('17,861', S_TBL_C), Paragraph('58.0', S_TBL_C), Paragraph('1.74', S_TBL_C), Paragraph('121.6', S_TBL_C), Paragraph('30.7%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('U tier avg', S_TBL), Paragraph('20,163', S_TBL_C), Paragraph('79.9', S_TBL_C), Paragraph('2.05', S_TBL_C), Paragraph('167.0', S_TBL_C), Paragraph('33.5%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph(I('Subject P early'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('49.3'), S_TBL_C), Paragraph(I('1.81'), S_TBL_C), Paragraph(I('108.7'), S_TBL_C), Paragraph(I('54.8%'), S_TBL_C), Paragraph('31R', S_TBL_C)],
-        [Paragraph(I('Subject P mid'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('45.9'), S_TBL_C), Paragraph(I('1.75'), S_TBL_C), Paragraph(I('94.1'), S_TBL_C), Paragraph(I('56.1%'), S_TBL_C), Paragraph('41R', S_TBL_C)],
-        [Paragraph(B('Subject P recent'), S_TBL), Paragraph(B('-'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C), Paragraph(B('1.92'), S_TBL_C), Paragraph(B('119.4'), S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph(B('16R'), S_TBL_C)],
+         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('VS'), S_TBL_H), Paragraph(B('n'), S_TBL_H)],
+        [Paragraph('A tier avg', S_TBL), Paragraph('11,466', S_TBL_C), Paragraph('27.2', S_TBL_C), Paragraph('1.24', S_TBL_C), Paragraph('59.2', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('A+ tier avg', S_TBL), Paragraph('13,248', S_TBL_C), Paragraph('33.8', S_TBL_C), Paragraph('1.37', S_TBL_C), Paragraph('72.3', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('S tier avg', S_TBL), Paragraph('16,223', S_TBL_C), Paragraph('46.4', S_TBL_C), Paragraph('1.63', S_TBL_C), Paragraph('98.8', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('S+ tier avg', S_TBL), Paragraph('17,879', S_TBL_C), Paragraph('57.5', S_TBL_C), Paragraph('1.79', S_TBL_C), Paragraph('122.1', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('SS tier avg', S_TBL), Paragraph('19,928', S_TBL_C), Paragraph('79.2', S_TBL_C), Paragraph('2.04', S_TBL_C), Paragraph('163.3', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph(I('Subject P early'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('49.3'), S_TBL_C), Paragraph(I('1.81'), S_TBL_C), Paragraph(I('108.7'), S_TBL_C), Paragraph('31R', S_TBL_C)],
+        [Paragraph(I('Subject P mid'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('45.9'), S_TBL_C), Paragraph(I('1.75'), S_TBL_C), Paragraph(I('94.1'), S_TBL_C), Paragraph('41R', S_TBL_C)],
+        [Paragraph(B('Subject P recent'), S_TBL), Paragraph(B('-'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C), Paragraph(B('1.92'), S_TBL_C), Paragraph(B('119.4'), S_TBL_C), Paragraph(B('16R'), S_TBL_C)],
     ]
-    tb = Table(bench, colWidths=[82, 50, 42, 40, 42, 45, 30])
+    tb = Table(bench, colWidths=[82, 55, 45, 42, 45, 35])
     tb.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG), ('BACKGROUND', (0, 5), (-1, 7), HexColor('#f5f0ff')),
+        ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG), ('BACKGROUND', (0, 6), (-1, 8), HexColor('#f5f0ff')),
         ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR), ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('TOPPADDING', (0, 0), (-1, -1), 3), ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 6] Position of Subject P against the S&#8211;U tier benchmark'), S_H3))
+    story.append(Paragraph(I('[Table 6] Position of Subject P against the all-tier benchmark (A&#8211;SS, excerpt of Table 3)'), S_H3))
     story.append(tb)
     story.append(Paragraph(
-        'Subject P&#39;s recent metrics (APM 55.1, PPS 1.92, VS 119.4) are close to the SS tier averages (APM 58.0, PPS '
-        '1.74, VS 121.6), exceeding the SS average in PPS. APM, however, falls slightly short of the SS average, so the '
-        'tier benchmark objectively supports the system&#39;s diagnosis that &quot;attack-conversion efficiency&quot; is '
-        'the next growth point. The one-year trajectory shows a rise from the S level (early) to near-SS (recent), '
-        'providing indirect corroborating evidence consistent with the improvement direction suggested by TetrioCoach&#39;s '
-        'feedback.',
+        'Subject P&#39;s early metrics (APM 49.3, PPS 1.81) lie between the S tier average (APM 46.4, PPS 1.63) and the S+ '
+        'average (APM 57.5, PPS 1.79), and the recent metrics (APM 55.1, PPS 1.92) are close to the S+ average (the '
+        'system&#39;s estimated tier is likewise S+). APM falls slightly short of the S+ average (57.5) while PPS exceeds '
+        'it, so the all-tier benchmark objectively supports the system&#39;s diagnosis that &quot;attack-conversion '
+        'efficiency&quot; is the next growth point. The one-year rise from the S level to near-S+ provides indirect '
+        'corroborating evidence consistent with the improvement direction suggested by TetrioCoach&#39;s feedback.',
         S_BODY))
     story.append(Spacer(1, 6))
 
@@ -540,10 +551,26 @@ def build():
 
     story.append(Paragraph('5.1 Academic Significance', S_H2))
     story.append(Paragraph(
-        'By demonstrating (1) a multi-level abstraction framework for Tetris replay data, (2) the empirical viability of '
-        'ML-based automatic weakness classification, and (3) the contribution of structured domain knowledge (build '
-        'patterns &#215; tiers) to feedback quality, this study opens up a new research area of replay-based automated '
-        'coaching.',
+        'Whereas prior Tetris AI research (Dellacherie, 2003; Gabillon et al., 2013; Cold Clear, 2019) focused on optimal '
+        'bot play (producing placements), this study makes a paradigmatic contribution by repurposing the same domain for '
+        'prescriptive coaching of human players. Concretely, the academic significance can be summarized in four points.',
+        S_BODY))
+    story.append(Paragraph('(1) Descriptive-to-prescriptive shift: beyond mere descriptive statistics, we present the first '
+        'comprehensive pipeline that converts 7.7M placement records into natural-language training prescriptions through '
+        'six abstraction stages.', S_BULLET))
+    story.append(Paragraph('(2) Weakness classification without circular reasoning: by deriving labels from unsupervised '
+        'K-Means clusters, the hardcoded-rule circularity is avoided while attaining a Macro F1 of 0.960.', S_BULLET))
+    story.append(Paragraph('(3) Separation-of-concerns design: style classification uses elite data while skill-level '
+        'calibration uses the empirical distributions of all 11 tiers (1,080 players), structurally preventing the '
+        'propagation of single-dataset bias. This is a design instance that explicitly separates the role of each data '
+        'source in esports player modeling.', S_BULLET))
+    story.append(Paragraph('(4) Structuring of domain knowledge: by building a 16 build patterns &#215; 11 tiers '
+        'cross-recommendation matrix grounded in public community knowledge, informal domain expertise is formalized into '
+        'reproducible prescription rules.', S_BULLET))
+    story.append(Paragraph(
+        'Through these contributions, this study opens up the new research area of replay-based automated coaching and '
+        'provides a framework generalizable beyond Tetris to any competitive game for which replays exist (Puyo Puyo, '
+        'fighting/rhythm games, etc.).',
         S_BODY))
     story.append(Paragraph(
         B('Justification of the data design by separation of concerns.') + ' '

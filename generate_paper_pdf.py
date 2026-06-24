@@ -77,7 +77,9 @@ def build():
         '기술적(descriptive) 통계를 넘어 처방적 피드백으로의 전환이라는 새로운 연구 방향을 제시한다.',
         S_ABSTRACT))
     story.append(Paragraph(
-        f'{B("키워드")}: 테트리스 AI, 자동 코칭, 리플레이 분석, 약점 분류, 기계학습, e스포츠, 처방적 피드백, 빌드 패턴',
+        f'{B("키워드")}: 게임 인공지능(Game AI), 플레이어 모델링(Player Modeling), 리플레이 분석, '
+        '비지도 클러스터링, Gradient Boosting, 기능 수준 보정(Skill Calibration), 처방적 피드백(Prescriptive Feedback), '
+        '도메인 지식 기반 추천, e스포츠 분석(Esports Analytics), 인간-AI 상호작용(Human-AI Interaction)',
         S_KW))
     story.append(hr())
 
@@ -459,21 +461,36 @@ def build():
         S_BODY))
     story.append(Spacer(1, 6))
 
-    # Case 4: 비교 분석
-    story.append(Paragraph(B('사례 4: 다중 플레이어 비교 분석'), S_H3))
+    # Case 4: 다중 비교 분석 (N=38)
+    story.append(Paragraph(B('사례 4: 다중 플레이어 비교 분석 (N=38)'), S_H3))
+    story.append(Paragraph(
+        B('표본 선정 기준:') + ' 저자의 로컬 매치 아카이브(37개 .ttrm)에 등장하는 모든 상대 플레이어 중 '
+        '6라운드(1매치) 이상의 데이터를 가진 37명 전원을 닉네임 중복 제거하여 선정하고, '
+        'Subject P(최근 구간)를 포함하여 총 38명을 분석하였다. 즉, 임의 선별이 아닌 '
+        '"아카이브 내 충분한 데이터를 가진 상대 전원"이라는 객관적 기준에 따른 표본이다. '
+        '표본의 분포는 PPS 1.38~2.37, APM 31.8~95.7, Finesse Fault 6.8~70.0%로 넓은 다양성을 보인다.',
+        S_BODY))
+    story.append(Paragraph(
+        B('ML 1순위 약점 분포(N=38):') + ' attack 22명(57.9%), balanced 8명(21.1%), '
+        'speed 3명(7.9%), finesse 3명(7.9%), defense 2명(5.3%). '
+        '5개 약점 클래스가 모두 표본에 나타나, 모델이 단일 라벨로 수렴하지 않고 '
+        '입력 프로필 차이에 따라 분화함을 N=38 규모에서 확인하였다. '
+        'attack이 다수(57.9%)인 것은 본 아카이브가 주로 S~S+ 구간 상대로 구성되어 '
+        '해당 스킬 대역의 공통 특성(공격 전환 효율 부족)이 반영된 결과이다.',
+        S_BODY))
+    story.append(Paragraph(I('[Table 5] 5개 약점 클래스를 포괄하는 대표 부분집합 (익명 P1~P5 + Subject P)'), S_H3))
     comp_data = [
-        [Paragraph(B('지표'), S_TBL_H), Paragraph(B('Subject P'), S_TBL_H),
-         Paragraph(B('Player A'), S_TBL_H), Paragraph(B('Player B'), S_TBL_H), Paragraph(B('Player C'), S_TBL_H)],
-        [Paragraph('PPS', S_TBL), Paragraph('1.83', S_TBL_C), Paragraph(B('2.36'), S_TBL_C), Paragraph('1.62', S_TBL_C), Paragraph('1.56', S_TBL_C)],
-        [Paragraph('APM', S_TBL), Paragraph('51.0', S_TBL_C), Paragraph('54.1', S_TBL_C), Paragraph('53.9', S_TBL_C), Paragraph('50.9', S_TBL_C)],
-        [Paragraph('T-Spin%', S_TBL), Paragraph('4.82', S_TBL_C), Paragraph('4.33', S_TBL_C), Paragraph('4.54', S_TBL_C), Paragraph('1.55', S_TBL_C)],
-        [Paragraph('Fault%', S_TBL), Paragraph('57.7', S_TBL_C), Paragraph(B('6.8'), S_TBL_C), Paragraph('36.6', S_TBL_C), Paragraph('17.9', S_TBL_C)],
-        [Paragraph('추정 티어', S_TBL), Paragraph('S', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('A+', S_TBL_C), Paragraph('A', S_TBL_C)],
-        [Paragraph('ML 1순위', S_TBL), Paragraph('attack/finesse', S_TBL_C), Paragraph(B('balanced'), S_TBL_C), Paragraph(B('attack'), S_TBL_C), Paragraph(B('speed'), S_TBL_C)],
-        [Paragraph('ML 확신도', S_TBL), Paragraph('0.46/0.46', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.41', S_TBL_C), Paragraph('0.58', S_TBL_C)],
-        [Paragraph('처방 초점', S_TBL), Paragraph('정확도+공격', S_TBL_C), Paragraph('유지관리', S_TBL_C), Paragraph('공격 빌드', S_TBL_C), Paragraph('속도', S_TBL_C)],
+        [Paragraph(B('지표'), S_TBL_H), Paragraph(B('P1'), S_TBL_H), Paragraph(B('P2'), S_TBL_H),
+         Paragraph(B('P3'), S_TBL_H), Paragraph(B('P4'), S_TBL_H), Paragraph(B('P5'), S_TBL_H), Paragraph(B('Subj.P'), S_TBL_H)],
+        [Paragraph('PPS', S_TBL), Paragraph('2.36', S_TBL_C), Paragraph('2.33', S_TBL_C), Paragraph('1.56', S_TBL_C), Paragraph('2.05', S_TBL_C), Paragraph('1.77', S_TBL_C), Paragraph('1.92', S_TBL_C)],
+        [Paragraph('APM', S_TBL), Paragraph('54.1', S_TBL_C), Paragraph('31.8', S_TBL_C), Paragraph('50.9', S_TBL_C), Paragraph('62.7', S_TBL_C), Paragraph('50.2', S_TBL_C), Paragraph('55.1', S_TBL_C)],
+        [Paragraph('T-Spin%', S_TBL), Paragraph('4.33', S_TBL_C), Paragraph('0.0', S_TBL_C), Paragraph('1.55', S_TBL_C), Paragraph('4.39', S_TBL_C), Paragraph('1.03', S_TBL_C), Paragraph('4.3', S_TBL_C)],
+        [Paragraph('Fault%', S_TBL), Paragraph('6.8', S_TBL_C), Paragraph('43.1', S_TBL_C), Paragraph('17.9', S_TBL_C), Paragraph('42.5', S_TBL_C), Paragraph('42.1', S_TBL_C), Paragraph('55.8', S_TBL_C)],
+        [Paragraph('티어', S_TBL), Paragraph('S+', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('S', S_TBL_C), Paragraph('S+', S_TBL_C), Paragraph('S+', S_TBL_C), Paragraph('S+', S_TBL_C)],
+        [Paragraph('ML 1순위', S_TBL), Paragraph(B('bal.'), S_TBL_C), Paragraph(B('att.'), S_TBL_C), Paragraph(B('spd.'), S_TBL_C), Paragraph(B('fin.'), S_TBL_C), Paragraph(B('def.'), S_TBL_C), Paragraph(B('fin.'), S_TBL_C)],
+        [Paragraph('확신도', S_TBL), Paragraph('0.58', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.58', S_TBL_C), Paragraph('0.41', S_TBL_C), Paragraph('0.35', S_TBL_C), Paragraph('0.56', S_TBL_C)],
     ]
-    tbl_c = Table(comp_data, colWidths=[60, 75, 75, 75, 75])
+    tbl_c = Table(comp_data, colWidths=[52, 50, 50, 50, 50, 50, 55])
     tbl_c.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG),
         ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
@@ -481,78 +498,76 @@ def build():
         ('TOPPADDING', (0, 0), (-1, -1), 3),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 5] 4명 플레이어의 다중 비교 분석 (검증 가능 데이터)'), S_H3))
     story.append(tbl_c)
     story.append(Paragraph(
-        '서로 다른 지표 프로필을 가진 4명의 플레이어에 대해, 하이브리드 ML 모델은 '
-        '4가지 상이한 1순위 약점을 예측하였다: Player A(Fault 6.8%로 정확도 우수, PPS 2.36)는 "balanced"(0.58), '
-        'Player B(Fault 36.6%, 중속)는 "attack"(0.41), Player C(PPS 1.56로 저속, T-Spin 1.55%)는 "speed"(0.58), '
-        'Subject P(Fault 57.7%)는 "attack/finesse"가 0.46으로 동률을 이루었다. '
-        '예측 결과가 입력 프로필의 차이(정확도·속도·T-Spin 활용도)에 따라 명확히 분화함을 확인할 수 있다.',
+        '대표 6명은 5개 약점 클래스를 각각 대표한다: P1(Fault 6.8%, PPS 2.36)은 balanced, '
+        'P2(T-Spin 0%로 공격 수단 부재)는 attack, P3(PPS 1.56 저속)은 speed, '
+        'P4(Fault 42.5%)는 finesse, P5(T-Spin 1.03%·수비 편중)는 defense로 판정되었다. '
+        '동일 티어(S~S+) 내에서도 입력 프로필 차이에 따라 진단이 명확히 분화함을 보여준다.',
         S_BODY))
     story.append(Paragraph(
-        B('약점 수렴에 대한 오류 분석 (Error Analysis):') + ' 본 연구의 예비 분석에서, '
-        '동일한 좁은 스킬 구간(S~SS)에서 Finesse Fault가 유사하게 높은(54~58%) 플레이어들만을 대상으로 했을 때 '
-        '예측이 finesse로 수렴하는 현상이 관찰되었다. 이는 모델 자체의 편향이라기보다, '
-        '하이브리드 예측에서 규칙 기반 점수(가중치 0.6)가 지배적인 구조에서 입력군의 공통 약점이 '
-        '그대로 반영된 결과이다. [Table 5]와 같이 정확도·속도·T-Spin 활용도가 이질적인 플레이어들을 '
-        '입력하면 예측이 balanced/attack/speed/finesse로 정상 분화하므로, '
-        '수렴 현상은 입력 표본의 동질성에 기인한 것임을 확인하였다. '
+        B('약점 분포에 대한 오류 분석 (Error Analysis):') + ' N=38에서 attack이 57.9%로 다수를 차지하는 것은 '
+        '모델 편향이 아니라 표본의 스킬 대역 동질성(주로 S~S+)에 기인한다. '
+        '동일 대역에서 Finesse Fault가 유사하게 높은 부분집합만을 보면 finesse로 수렴하는 경향이 관찰되나, '
+        '[Table 5]처럼 정확도·속도·T-Spin 활용도가 이질적인 플레이어를 포함하면 '
+        'balanced/attack/speed/finesse/defense 5개 클래스로 정상 분화한다. '
         '다만 규칙 기반 가중치(0.6)가 ML(0.4)보다 높아 경계선 사례에서 규칙 점수가 우세한 구조적 특성이 '
         '존재하며, 전 티어 학습 데이터 확보 시 ML 가중치를 상향하여 데이터 주도 분류를 강화할 수 있다.',
         S_BODY))
     story.append(Paragraph(
         B('최종 처방의 질적 대조:') + ' ML 1순위가 다른 플레이어 간에는 후속 파이프라인의 처방이 '
-        '명확히 갈린다. "balanced"로 판정된 Player A에게는 20분 루틴 첫 단계로 "TKI 오프닝 패턴 10회 반복"(공격 빌드 숙련)이, '
-        '"speed"로 판정된 Player C에게는 "40L 스프린트 3회 — 속도 감각 워밍업"이 우선 배치되었다. '
-        '또한 추정 티어(S/S/A+/A)에 따라 빌드 추천 집합이 달라져, '
-        'Player A·B에게는 PCO·Hachispin 등 고난도 오프닝이, Player C에게는 STSD 중심의 기초 빌드가 제시되었다. '
+        '명확히 갈린다. "balanced"로 판정된 P1에게는 20분 루틴 첫 단계로 "TKI 오프닝 패턴 10회 반복"(공격 빌드 숙련)이, '
+        '"speed"로 판정된 P3에게는 "40L 스프린트 3회 — 속도 감각 워밍업"이, '
+        '"attack"으로 판정된 P2에게는 오프닝 빌드 학습이 우선 배치되었다. '
         '이로써 ML 라벨 → 티어 추정 → 빌드 매트릭스 → 약점 우선순위의 조합이 '
         '플레이어별로 질적으로 상이한 훈련 처방을 생성함을 실증하였다.',
         S_BODY))
 
-    # Case 5: Tier benchmark comparison
-    story.append(Paragraph(B('사례 5: S~U 티어 벤치마크 대비 Subject P 성장 분석'), S_H3))
+    # Case 5: 전 티어 벤치마크 대비 성장 분석
+    story.append(Paragraph(B('사례 5: 전 티어 벤치마크([Table 3]) 대비 Subject P 성장 분석'), S_H3))
     story.append(Paragraph(
-        'TETR.IO 공개 리더보드 API에서 S, S+, SS, U 각 티어의 플레이어 10명을 무작위 추출하여 '
-        '평균 통계를 산출하고, Subject P의 종단적 성장 궤적과 비교하였다.',
+        '3.2.1절에서 수집한 전 11개 티어 실측 벤치마크([Table 3], 1,080명) 중 Subject P의 성장 궤적이 '
+        '걸쳐 있는 A~SS 구간을 발췌하여, 종단적 위치 변화를 비교하였다. '
+        '벤치마크 수치는 [Table 3]과 동일한 권위 데이터를 사용한다(이전 S~U 일부 표본의 노이즈 문제를 제거).',
         S_BODY))
 
     bench_data = [
         [Paragraph(B('구간/티어'), S_TBL_H), Paragraph(B('TR'), S_TBL_H), Paragraph(B('APM'), S_TBL_H),
-         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('VS'), S_TBL_H), Paragraph(B('승률'), S_TBL_H), Paragraph(B('n'), S_TBL_H)],
-        [Paragraph('S tier avg', S_TBL), Paragraph('14,996', S_TBL_C), Paragraph('39.7', S_TBL_C),
-         Paragraph('1.45', S_TBL_C), Paragraph('86.5', S_TBL_C), Paragraph('45.3%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('S+ tier avg', S_TBL), Paragraph('16,276', S_TBL_C), Paragraph('42.9', S_TBL_C),
-         Paragraph('1.43', S_TBL_C), Paragraph('96.7', S_TBL_C), Paragraph('24.8%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('SS tier avg', S_TBL), Paragraph('17,861', S_TBL_C), Paragraph('58.0', S_TBL_C),
-         Paragraph('1.74', S_TBL_C), Paragraph('121.6', S_TBL_C), Paragraph('30.7%', S_TBL_C), Paragraph('10', S_TBL_C)],
-        [Paragraph('U tier avg', S_TBL), Paragraph('20,163', S_TBL_C), Paragraph('79.9', S_TBL_C),
-         Paragraph('2.05', S_TBL_C), Paragraph('167.0', S_TBL_C), Paragraph('33.5%', S_TBL_C), Paragraph('10', S_TBL_C)],
+         Paragraph(B('PPS'), S_TBL_H), Paragraph(B('VS'), S_TBL_H), Paragraph(B('n'), S_TBL_H)],
+        [Paragraph('A tier avg', S_TBL), Paragraph('11,466', S_TBL_C), Paragraph('27.2', S_TBL_C),
+         Paragraph('1.24', S_TBL_C), Paragraph('59.2', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('A+ tier avg', S_TBL), Paragraph('13,248', S_TBL_C), Paragraph('33.8', S_TBL_C),
+         Paragraph('1.37', S_TBL_C), Paragraph('72.3', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('S tier avg', S_TBL), Paragraph('16,223', S_TBL_C), Paragraph('46.4', S_TBL_C),
+         Paragraph('1.63', S_TBL_C), Paragraph('98.8', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('S+ tier avg', S_TBL), Paragraph('17,879', S_TBL_C), Paragraph('57.5', S_TBL_C),
+         Paragraph('1.79', S_TBL_C), Paragraph('122.1', S_TBL_C), Paragraph('100', S_TBL_C)],
+        [Paragraph('SS tier avg', S_TBL), Paragraph('19,928', S_TBL_C), Paragraph('79.2', S_TBL_C),
+         Paragraph('2.04', S_TBL_C), Paragraph('163.3', S_TBL_C), Paragraph('100', S_TBL_C)],
         [Paragraph(I('Subject P 초기'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('49.3'), S_TBL_C),
-         Paragraph(I('1.81'), S_TBL_C), Paragraph(I('108.7'), S_TBL_C), Paragraph(I('54.8%'), S_TBL_C), Paragraph('31R', S_TBL_C)],
+         Paragraph(I('1.81'), S_TBL_C), Paragraph(I('108.7'), S_TBL_C), Paragraph('31R', S_TBL_C)],
         [Paragraph(I('Subject P 중기'), S_TBL), Paragraph('-', S_TBL_C), Paragraph(I('45.9'), S_TBL_C),
-         Paragraph(I('1.75'), S_TBL_C), Paragraph(I('94.1'), S_TBL_C), Paragraph(I('56.1%'), S_TBL_C), Paragraph('41R', S_TBL_C)],
+         Paragraph(I('1.75'), S_TBL_C), Paragraph(I('94.1'), S_TBL_C), Paragraph('41R', S_TBL_C)],
         [Paragraph(B('Subject P 최근'), S_TBL), Paragraph(B('-'), S_TBL_C), Paragraph(B('55.1'), S_TBL_C),
-         Paragraph(B('1.92'), S_TBL_C), Paragraph(B('119.4'), S_TBL_C), Paragraph(B('62.5%'), S_TBL_C), Paragraph(B('16R'), S_TBL_C)],
+         Paragraph(B('1.92'), S_TBL_C), Paragraph(B('119.4'), S_TBL_C), Paragraph(B('16R'), S_TBL_C)],
     ]
-    tbl_bench = Table(bench_data, colWidths=[80, 50, 42, 40, 42, 45, 30])
+    tbl_bench = Table(bench_data, colWidths=[80, 55, 45, 42, 45, 35])
     tbl_bench.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), LIGHT_BG),
-        ('BACKGROUND', (0, 5), (-1, 7), HexColor('#f5f0ff')),
+        ('BACKGROUND', (0, 6), (-1, 8), HexColor('#f5f0ff')),
         ('GRID', (0, 0), (-1, -1), 0.4, LINE_COLOR),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('TOPPADDING', (0, 0), (-1, -1), 3),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
     ]))
-    story.append(Paragraph(I('[Table 6] S~U 티어 벤치마크 대비 Subject P 위치 비교'), S_H3))
+    story.append(Paragraph(I('[Table 6] 전 티어 벤치마크(A~SS, [Table 3] 발췌) 대비 Subject P 위치'), S_H3))
     story.append(tbl_bench)
     story.append(Paragraph(
-        'Subject P의 최근 지표(APM 55.1, PPS 1.92, VS 119.4)는 SS 티어 평균(APM 58.0, PPS 1.74, VS 121.6)과 '
-        '근접하며, PPS에서는 SS 평균을 초과한다. 반면 APM은 SS 평균에 약간 미달하여, '
-        '시스템이 진단한 "공격 전환 효율"이 다음 성장 포인트임을 티어 벤치마크가 객관적으로 뒷받침한다. '
-        '1년간의 성장 궤적은 S 수준(초기)에서 SS 근접(최근)으로의 상승을 보여주며, '
-        '이는 TetrioCoach의 피드백이 제시하는 개선 방향과 일치하는 간접 검증 근거가 된다.',
+        'Subject P의 초기 지표(APM 49.3, PPS 1.81)는 S 티어 평균(APM 46.4, PPS 1.63)과 S+ 평균(APM 57.5, PPS 1.79) '
+        '사이에 위치하며, 최근 지표(APM 55.1, PPS 1.92)는 S+ 평균에 근접한다(시스템 추정 티어도 S+). '
+        'APM이 S+ 평균(57.5)에 약간 미달하는 반면 PPS는 S+를 상회하여, '
+        '시스템이 진단한 "공격 전환 효율"이 다음 성장 포인트임을 전 티어 벤치마크가 객관적으로 뒷받침한다. '
+        '1년간 S 수준에서 S+ 근접으로의 상승 궤적은 TetrioCoach 피드백의 개선 방향과 일치하는 간접 검증 근거가 된다.',
         S_BODY))
     story.append(Spacer(1, 6))
 
@@ -563,10 +578,25 @@ def build():
 
     story.append(Paragraph('5.1 학술적 의의', S_H2))
     story.append(Paragraph(
-        '본 연구는 (1) 테트리스 리플레이 데이터의 다층 추상화 프레임워크, '
-        '(2) ML 기반 약점 자동 분류의 실증, '
-        '(3) 도메인 지식 구조화(빌드 패턴 x 티어)의 피드백 품질 기여를 입증함으로써, '
-        '리플레이 기반 자동 코칭이라는 새로운 연구 영역을 개척하였다.',
+        '기존 테트리스 AI 연구(Dellacherie, 2003; Gabillon et al., 2013; Cold Clear, 2019)가 '
+        '봇의 최적 플레이(배치 위치 산출)에 집중한 반면, 본 연구는 동일한 도메인을 인간 플레이어를 위한 '
+        '처방적 코칭으로 전환하였다는 점에서 패러다임적 기여를 갖는다. 구체적으로 본 연구의 학술적 의의는 '
+        '다음 네 가지로 요약된다.',
+        S_BODY))
+    story.append(Paragraph('(1) 기술적-처방적 전환(Descriptive-to-Prescriptive): 단순 통계 기술을 넘어, '
+        '7.7M 배치 데이터를 6단계 추상화를 거쳐 자연어 훈련 처방으로 변환하는 종합 파이프라인을 최초로 제시한다.', S_BULLET))
+    story.append(Paragraph('(2) 순환 논리 없는 약점 분류: 비지도 K-Means 군집에서 라벨을 도출하여 '
+        '하드코딩 규칙의 순환 논리를 회피하고, Macro F1 0.960의 분류 성능을 달성하였다.', S_BULLET))
+    story.append(Paragraph('(3) 관심사 분리 설계: 스타일 분류는 엘리트 데이터로, 기능 수준 보정은 '
+        '전 11개 티어 실측 분포(1,080명)로 수행하여, 단일 데이터셋 편향의 전파를 구조적으로 차단하였다. '
+        '이는 e스포츠 플레이어 모델링에서 데이터 출처별 역할을 명시적으로 분리한 설계 사례이다.', S_BULLET))
+    story.append(Paragraph('(4) 도메인 지식의 구조화: 16개 빌드 패턴 x 11개 티어의 교차 추천 매트릭스를 '
+        '공개 커뮤니티 지식에 근거하여 구축함으로써, 비형식적 도메인 전문성을 재현 가능한 처방 규칙으로 '
+        '형식화하였다.', S_BULLET))
+    story.append(Paragraph(
+        '이로써 본 연구는 "리플레이 기반 자동 코칭"이라는 새로운 연구 영역을 개척하며, '
+        '테트리스를 넘어 리플레이가 존재하는 모든 경쟁 게임(Puyo Puyo, 격투/리듬 게임 등)으로 '
+        '일반화 가능한 프레임워크를 제공한다.',
         S_BODY))
     story.append(Paragraph(
         B('관심사 분리(Separation of Concerns)에 의한 데이터 설계 정당성:') + ' '
