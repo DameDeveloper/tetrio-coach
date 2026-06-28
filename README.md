@@ -52,20 +52,49 @@ L4 — FEEDBACK GENERATION
 
 ## Installation
 
+### For Users (Windows Installer)
+
+1. [Releases](https://github.com/DameDeveloper/tetrio-coach/releases) 페이지에서 `TetrioCoach_Setup_x.x.x.exe` 다운로드
+2. 인스톨러 실행 → 언어 선택 (한국어 / English / 中文 / 日本語)
+3. 설치 경로 지정 (기본: `%LOCALAPPDATA%\TetrioCoach`)
+4. 설치 완료 → 바탕화면 또는 시작메뉴의 **TetrioCoach** 아이콘 클릭
+
+> Python 설치 불필요. 모든 의존성이 인스톨러에 포함되어 있습니다.
+
+### For Developers (Source)
+
 ```bash
 git clone https://github.com/DameDeveloper/tetrio-coach.git
 cd tetrio-coach
 pip install -r requirements.txt
-```
-
-## Quick Start
-
-### Run the GUI Application
-```bash
 python tetrio_coach.py
 ```
 
-### Analyze a .ttrm Replay (Python API)
+---
+
+## Quick Start
+
+### 1. 온라인 분석 (닉네임만 입력)
+1. "온라인 전적 연동" 선택
+2. TETR.IO 닉네임 또는 프로필 URL 입력 (예: `lazy_ningen`)
+3. **▶ AI 코칭 분석 시작** 클릭
+4. AI 코칭 / 통계 요약 / 훈련 로드맵 탭에서 결과 확인
+
+> 온라인 모드에서는 APM, PPS, VS 등 기본 통계만 분석됩니다.
+
+### 2. 로컬 리플레이 분석 (상세 분석)
+1. "로컬 리플레이 파일" 선택
+2. **+ 파일 추가**로 `.ttrm` 파일 선택 (여러 개 가능)
+3. 닉네임 입력 후 분석 시작
+4. T-Spin 상세, 라인 클리어, Finesse 등 전체 통계 확인 가능
+
+> `.ttrm` 파일은 TETR.IO 게임 내에서 리플레이 저장 시 생성됩니다.
+
+### 3. 언어 변경
+- 사이드바 하단의 언어 드롭다운에서 변경
+- 앱 재시작 시 적용
+
+### Python API (개발자용)
 ```python
 from tetrio_coach import parse_local_ttrm, compute_aggregates_v2
 from training.feedback_generator import generate_full_feedback
@@ -77,10 +106,17 @@ print(coaching)
 print(roadmap)
 ```
 
-### Retrain the ML Model (Optional)
+### ML 모델 재학습 (선택)
 ```bash
 pip install kagglehub
 python training/train_from_kaggle.py --max-games 60000
+```
+
+### 인스톨러 빌드 (개발자용)
+```bash
+pip install pyinstaller
+# NSIS 설치: https://nsis.sourceforge.io/Download
+python build.py
 ```
 
 ---
@@ -103,6 +139,13 @@ Pre-trained model artifacts are included in `training/models/` for immediate use
 ```
 tetrio-coach/
 ├── tetrio_coach.py              # Main application (Tkinter GUI + parser + stats)
+├── _paths.py                    # PyInstaller-compatible path utilities
+├── i18n.py                      # Multi-language support (ko/en/zh/ja)
+├── locales/                     # Translation files
+│   ├── ko.json                  # 한국어
+│   ├── en.json                  # English
+│   ├── zh.json                  # 中文
+│   └── ja.json                  # 日本語
 ├── training/
 │   ├── feedback_generator.py    # Coaching report & roadmap generation
 │   ├── evaluator.py             # Player profiling & weakness detection
@@ -113,7 +156,12 @@ tetrio-coach/
 │   ├── collect_top_players.py   # TETR.IO leaderboard data collector
 │   ├── train_from_kaggle.py     # Kaggle dataset training pipeline
 │   └── models/                  # Pre-trained model artifacts (.pkl, .json)
-├── sample_replay.ttrm           # Example .ttrm replay for testing
+├── assets/
+│   └── tetrio_coach.ico         # App icon
+├── build.py                     # Unified build script (PyInstaller + NSIS)
+├── tetrio_coach.spec            # PyInstaller spec file
+├── installer.nsi                # NSIS installer script
+├── version_info.txt             # Windows version resource
 ├── requirements.txt             # Python dependencies
 ├── LICENSE                      # MIT License
 └── README.md
